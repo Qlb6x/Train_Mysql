@@ -1,0 +1,172 @@
+insert into trainnotable values
+('G18','上海虹桥','北京南','高铁',4,'20160411150000','20160411195500','04:55:00',0,10,null,15,20,null,null,null,null,null,null,null);
+insert into trainnotable values                       
+('G18','上海虹桥','北京南','高铁',4,'20160412150000','20160412195500','04:55:00',0,10,null,15,20,null,null,null,null,null,null,null);
+insert into trainnotable values                       
+('G18','上海虹桥','北京南','高铁',4,'20160413150000','20160413195500','04:55:00',0,10,null,15,20,null,null,null,null,null,null,null);
+insert into trainnotable values                       
+('G18','上海虹桥','北京南','高铁',4,'20160414150000','20160414195500','04:55:00',0,10,null,15,20,null,null,null,null,null,null,null);
+insert into trainnotable values                       
+('G18','上海虹桥','北京南','高铁',4,'20160415150000','20160415195500','04:55:00',0,10,null,15,20,null,null,null,null,null,null,null);
+insert into trainnotable values                       
+('G18','上海虹桥','北京南','高铁',4,'20160416150000','20160416195500','04:55:00',0,10,null,15,20,null,null,null,null,null,null,null);
+insert into trainnotable values                       
+('G18','上海虹桥','北京南','高铁',4,'20160417150000','20160417195500','04:55:00',0,10,null,15,20,null,null,null,null,null,null,null);
+insert into trainnotable values                       
+('G18','上海虹桥','北京南','高铁',4,'20160418150000','20160418195500','04:55:00',0,10,null,15,20,null,null,null,null,null,null,null);
+insert into trainnotable values                       
+('G18','上海虹桥','北京南','高铁',4,'20160419150000','20160419195500','04:55:00',0,10,null,15,20,null,null,null,null,null,null,null);
+insert into trainnotable values                       
+('G18','上海虹桥','北京南','高铁',4,'20160420150000','20160420195500','04:55:00',0,10,null,15,20,null,null,null,null,null,null,null);
+insert into trainnotable values                       
+('G18','上海虹桥','北京南','高铁',4,'20160421150000','20160421195500','04:55:00',0,10,null,15,20,null,null,null,null,null,null,null);
+insert into trainnotable values                       
+('G18','上海虹桥','北京南','高铁',4,'20160422150000','20160422195500','04:55:00',0,10,null,15,20,null,null,null,null,null,null,null);
+insert into trainnotable values                       
+('G18','上海虹桥','北京南','高铁',4,'20160423150000','20160423195500','04:55:00',0,10,null,15,20,null,null,null,null,null,null,null);
+insert into trainnotable values                       
+('G18','上海虹桥','北京南','高铁',4,'20160424150000','20160424195500','04:55:00',0,10,null,15,20,null,null,null,null,null,null,null);
+
+insert into stationtable values
+('G18','上海虹桥',1,'高铁',null,0,'150000',0);
+insert into stationtable values
+('G18','南京南',2,'高铁','160700',0,'160900',0);
+insert into stationtable values
+('G18','济南西',3,'高铁','182100',0,'182300',0);
+insert into stationtable values
+('G18','北京南',4,'高铁','195500',0,'195500',0);
+
+insert into costtable values
+('G18','上海虹桥','南京南',429.5,null,229.5,134.5,null,null,null,null,null,null,null);
+insert into costtable values
+('G18','上海虹桥','济南西',1263.5,null,673.5,398.5,null,null,null,null,null,null,null);
+insert into costtable values
+('G18','上海虹桥','北京南',1748,null,933,533,null,null,null,null,null,null,null);
+insert into costtable values
+('G18','南京南','济南西',879,null,469,279,null,null,null,null,null,null,null);
+insert into costtable values
+('G18','南京南','北京南',879,null,469,279,null,null,null,null,null,null,null);
+insert into costtable values
+('G18','济南西','北京南',589.5,null,314.5,184.5,null,null,null,null,null,null,null);
+
+insert into seattable values
+('1','G18','商务座','01','01');
+insert into seattable values
+('2','G18','商务座','01','02');
+insert into seattable values
+('3','G18','商务座','01','03');
+insert into seattable values
+('4','G18','商务座','01','04');
+insert into seattable values
+('5','G18','商务座','01','05');
+insert into seattable values
+('6','G18','商务座','01','06');
+insert into seattable values
+('7','G18','商务座','01','07');
+insert into seattable values
+('8','G18','商务座','01','08');
+insert into seattable values
+('9','G18','商务座','01','09');
+insert into seattable values
+('10','G18','商务座','01','10');
+insert into seattable values
+('11','G18','一等座','02','01');
+insert into seattable values
+('12','G18','一等座','02','02');
+insert into seattable values
+('13','G18','一等座','02','03');
+insert into seattable values
+('14','G18','一等座','02','04');
+insert into seattable values
+('15','G18','一等座','02','05');
+insert into seattable values
+('16','G18','一等座','02','06');
+insert into seattable values
+('17','G18','一等座','02','07');
+insert into seattable values
+('18','G18','一等座','02','08');
+insert into seattable values
+('19','G18','一等座','02','09');
+insert into seattable values
+('20','G18','一等座','02','10');
+insert into seattable values
+('21','G18','一等座','02','11');
+insert into seattable values
+('22','G18','一等座','02','12');
+insert into seattable values
+('23','G18','一等座','02','13');
+insert into seattable values
+('24','G18','一等座','02','14');
+insert into seattable values
+('25','G18','一等座','02','15');
+
+
+insert into seattable values
+('26','G18','二等座','03','01');
+insert into seattable values
+('27','G18','二等座','03','02');
+insert into seattable values
+('28','G18','二等座','03','03');
+insert into seattable values
+('29','G18','二等座','03','04');
+insert into seattable values
+('30','G18','二等座','03','05');
+insert into seattable values
+('31','G18','二等座','03','06');
+insert into seattable values
+('32','G18','二等座','03','07');
+insert into seattable values
+('33','G18','二等座','03','08');
+insert into seattable values
+('34','G18','二等座','03','09');
+insert into seattable values
+('35','G18','二等座','03','10');
+
+insert into seattable values
+('36','G18','二等座','03','11');
+insert into seattable values
+('37','G18','二等座','03','12');
+insert into seattable values
+('38','G18','二等座','03','13');
+insert into seattable values
+('39','G18','二等座','03','14');
+insert into seattable values
+('40','G18','二等座','03','15');
+insert into seattable values
+('41','G18','二等座','03','16');
+insert into seattable values
+('42','G18','二等座','03','17');
+insert into seattable values
+('43','G18','二等座','03','18');
+insert into seattable values
+('44','G18','二等座','03','19');
+insert into seattable values
+('45','G18','二等座','03','20');
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

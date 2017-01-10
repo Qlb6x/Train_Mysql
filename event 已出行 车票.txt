@@ -1,0 +1,12 @@
+drop event if exists autotask2;
+create event autotask2 on schedule EVERY 1 second
+on completion preserve do 
+update userorder set order_flag=5 where order_flag=1 and order_no in (
+select x.order_no from( 
+select a.order_no from userorder a,tickettable b,stationtable c
+where a.ticket_no=b.ticket_no 
+and a.order_flag=1
+and b.station_start=c.station_start 
+and b.train_no=c.train_no
+and now()>concat(date(date_add(date_format(substring(b.ticket_no,length(b.train_no)+1,8),'%Y-%m-%d'),interval station_time2_day day)),' ',time(station_time2)))x);
+

@@ -1,0 +1,915 @@
+drop event if exists everyday_testevent2;
+create event everyday_testevent2 on schedule 
+EVERY 1 day starts '2016-03-20 09:00:00'
+do call everyday_test1;
+
+drop event if exists everyday_testevent1;
+create event everyday_testevent1 on schedule 
+EVERY 1 day starts '2016-03-20 08:00:00'
+do call everyday_test1;
+
+DELIMITER //
+drop procedure if exists everyday_test1;
+create procedure everyday_test1()
+	begin
+		declare da varchar(30);
+		select date_format(date(now()),'%Y%m%d') into da;
+		call orderticket('G102','南京南','滁州',da,'一等座','1');
+
+	end;
+//
+DELIMITER ;
+
+
+drop event if exists everyday_testevent3;
+create event everyday_testevent3 on schedule 
+EVERY 2 day starts '2016-03-20 10:00:00'
+do call everyday_test1;
+
+drop event if exists autocountrest;
+create event autocountrest on schedule EVERY 1800 second
+on completion preserve do 
+call countrest();
+
+drop event if exists autonightupdate;
+create event autonightupdate on schedule 
+EVERY 30 SECOND
+on completion preserve
+do call updatetime();
+
+drop event if exists autodelticket;
+create event autodelticket on schedule 
+EVERY 1 day starts '2016-03-07 23:59:00'
+do call everynightdel();
+
+DELIMITER //
+drop trigger if exists autotrigger;
+create trigger autotrigger
+after update on userorder
+for each row
+	begin
+		if (new.order_flag=4) then
+			call cancelorder2(new.ticket_no,new.order_no);
+		END IF;
+	end;
+//
+DELIMITER ;
+
+DELIMITER //
+drop trigger if exists autorestticket;
+create trigger autorestticket
+after insert on costtable
+for each row
+	begin
+		declare S varchar(30);
+		declare E varchar(30);
+		SET s=new.station_start;
+		set E=new.station_end;
+		delete from restticket where station_start='#';
+		insert into restticket (station_start,station_end)
+		values(left(S,2),left(E,2));
+		insert into restticket (station_start,station_end)
+		values('#','#');
+	end;
+//
+DELIMITER ;
+
+
+DELIMITER //
+drop procedure if exists cancelorder2;
+create procedure cancelorder2(ticketno varchar(30),orderno varchar(30))
+	begin
+		declare S varchar(20);	
+		declare E varchar(20);
+		declare seatid varchar(20);
+		declare numS int default 0;
+		declare numE int default 0;
+		declare trainnum int default 0;
+		declare trainno varchar(20);
+		declare flag int;
+		declare shorttrainno varchar(30);
+		declare i int default 1;
+		declare j int;
+		declare k int default 0;
+		declare userorder_num int;/*找到userorder表中 某用户 订单的最大值*/
+
+		
+		
+		select station_start,station_end,seat_id,train_no
+		into S,E,seatid,trainno
+		from tickettable where ticket_no=ticketno;
+		
+		/*找最大站序*/
+		select train_num into trainnum from trainnotable where train_no=trainno and date(train_time1)=substring(ticketno,length(trainno)+1,8);
+		
+		
+		select station_order into numS from stationtable where train_no=trainno and station_start=S;
+		select station_order into numE from stationtable where train_no=trainno and station_start=E;
+		
+		
+		select left(ticketno,length(trainno)+8+5) into shorttrainno;
+
+		/*select numS,numE,trainno,seatid;*/
+	
+			while i<=numS do
+				set j=numS+1;
+				while j<=trainnum do
+					update tickettable set ticket_flag2=1 where left(ticket_no,length(train_no)+5+8)=shorttrainno 
+					and right(ticket_no,4)=concat(LPAD(i,2,0),LPAD(j,2,0))
+					and ticket_flag1=0 and ticket_flag2=0; 
+					
+					set j=j+1;
+				end while;
+				set i=i+1;
+			end while;	
+			
+			set i=numS+1;
+			while i<=numE-1 do
+				set j=i+1;
+				while j<=trainnum do
+					update tickettable set ticket_flag2=1 where left(ticket_no,length(train_no)+5+8)=shorttrainno 
+					and right(ticket_no,4)=concat(LPAD(i,2,0),LPAD(j,2,0))
+					and ticket_flag1=0 and ticket_flag2=0; 
+					
+					set j=j+1;
+				end while;
+				set i=i+1;
+			end while;
+	end;
+//
+DELIMITER ;
+
+DELIMITER //
+drop procedure if exists updatetime;
+create procedure updatetime()
+	begin
+		declare t7 int;
+		declare t8 int;
+		declare t9 int;
+		declare t10 int;
+		declare t11 int;
+		declare t12 int;
+		declare t13 int;
+		declare t14 int;
+		declare t15 int;
+		declare t16 int;
+		declare t17 int;
+		declare t18 int;
+		declare t19 int;
+		declare t20 int;
+		declare t21 int;
+		declare t22 int;
+		delete from timespread;
+		select count(*) into t7 from userorder where date_format(time(order_time),'%H')=7 and date(now())=date(order_time);
+		select count(*) into t8 from userorder where date_format(time(order_time),'%H')=8 and date(now())=date(order_time);
+		select count(*) into t9 from userorder where date_format(time(order_time),'%H')=9 and date(now())=date(order_time);
+		select count(*) into t10 from userorder where date_format(time(order_time),'%H')=10 and date(now())=date(order_time);
+		select count(*) into t11 from userorder where date_format(time(order_time),'%H')=11 and date(now())=date(order_time);
+		select count(*) into t12 from userorder where date_format(time(order_time),'%H')=12 and date(now())=date(order_time);
+		select count(*) into t13 from userorder where date_format(time(order_time),'%H')=13 and date(now())=date(order_time);
+		select count(*) into t14 from userorder where date_format(time(order_time),'%H')=14 and date(now())=date(order_time);
+		select count(*) into t15 from userorder where date_format(time(order_time),'%H')=15 and date(now())=date(order_time);
+		select count(*) into t16 from userorder where date_format(time(order_time),'%H')=16 and date(now())=date(order_time);
+		select count(*) into t17 from userorder where date_format(time(order_time),'%H')=17 and date(now())=date(order_time);
+		select count(*) into t18 from userorder where date_format(time(order_time),'%H')=18 and date(now())=date(order_time);
+		select count(*) into t19 from userorder where date_format(time(order_time),'%H')=19 and date(now())=date(order_time);
+		select count(*) into t20 from userorder where date_format(time(order_time),'%H')=20 and date(now())=date(order_time);
+		select count(*) into t21 from userorder where date_format(time(order_time),'%H')=21 and date(now())=date(order_time);
+		select count(*) into t22 from userorder where date_format(time(order_time),'%H')=22 and date(now())=date(order_time);
+		insert into timespread values(t7,t8,t9,t10,t11,t12,t13,t14,t15,t16,t17,t18,t19,t20,t21,t22);
+		
+		select count(*) into t7 from userorder where date_format(time(order_time),'%H')=7 and date_add(date(now()),interval -1 day)=date(order_time);
+		select count(*) into t8 from userorder where date_format(time(order_time),'%H')=8 and date_add(date(now()),interval -1 day)=date(order_time);
+		select count(*) into t9 from userorder where date_format(time(order_time),'%H')=9 and date_add(date(now()),interval -1 day)=date(order_time);
+		select count(*) into t10 from userorder where date_format(time(order_time),'%H')=10 and date_add(date(now()),interval -1 day)=date(order_time);
+		select count(*) into t11 from userorder where date_format(time(order_time),'%H')=11 and date_add(date(now()),interval -1 day)=date(order_time);
+		select count(*) into t12 from userorder where date_format(time(order_time),'%H')=12 and date_add(date(now()),interval -1 day)=date(order_time);
+		select count(*) into t13 from userorder where date_format(time(order_time),'%H')=13 and date_add(date(now()),interval -1 day)=date(order_time);
+		select count(*) into t14 from userorder where date_format(time(order_time),'%H')=14 and date_add(date(now()),interval -1 day)=date(order_time);
+		select count(*) into t15 from userorder where date_format(time(order_time),'%H')=15 and date_add(date(now()),interval -1 day)=date(order_time);
+		select count(*) into t16 from userorder where date_format(time(order_time),'%H')=16 and date_add(date(now()),interval -1 day)=date(order_time);
+		select count(*) into t17 from userorder where date_format(time(order_time),'%H')=17 and date_add(date(now()),interval -1 day)=date(order_time);
+		select count(*) into t18 from userorder where date_format(time(order_time),'%H')=18 and date_add(date(now()),interval -1 day)=date(order_time);
+		select count(*) into t19 from userorder where date_format(time(order_time),'%H')=19 and date_add(date(now()),interval -1 day)=date(order_time);
+		select count(*) into t20 from userorder where date_format(time(order_time),'%H')=20 and date_add(date(now()),interval -1 day)=date(order_time);
+		select count(*) into t21 from userorder where date_format(time(order_time),'%H')=21 and date_add(date(now()),interval -1 day)=date(order_time);
+		select count(*) into t22 from userorder where date_format(time(order_time),'%H')=22 and date_add(date(now()),interval -1 day)=date(order_time);
+		insert into timespread values(t7,t8,t9,t10,t11,t12,t13,t14,t15,t16,t17,t18,t19,t20,t21,t22);
+		
+		select count(*) into t7 from userorder where date_format(time(order_time),'%H')=7 and date_add(date(now()),interval -2 day)=date(order_time);
+		select count(*) into t8 from userorder where date_format(time(order_time),'%H')=8 and date_add(date(now()),interval -2 day)=date(order_time);
+		select count(*) into t9 from userorder where date_format(time(order_time),'%H')=9 and date_add(date(now()),interval -2 day)=date(order_time);
+		select count(*) into t10 from userorder where date_format(time(order_time),'%H')=10 and date_add(date(now()),interval -2 day)=date(order_time);
+		select count(*) into t11 from userorder where date_format(time(order_time),'%H')=11 and date_add(date(now()),interval -2 day)=date(order_time);
+		select count(*) into t12 from userorder where date_format(time(order_time),'%H')=12 and date_add(date(now()),interval -2 day)=date(order_time);
+		select count(*) into t13 from userorder where date_format(time(order_time),'%H')=13 and date_add(date(now()),interval -2 day)=date(order_time);
+		select count(*) into t14 from userorder where date_format(time(order_time),'%H')=14 and date_add(date(now()),interval -2 day)=date(order_time);
+		select count(*) into t15 from userorder where date_format(time(order_time),'%H')=15 and date_add(date(now()),interval -2 day)=date(order_time);
+		select count(*) into t16 from userorder where date_format(time(order_time),'%H')=16 and date_add(date(now()),interval -2 day)=date(order_time);
+		select count(*) into t17 from userorder where date_format(time(order_time),'%H')=17 and date_add(date(now()),interval -2 day)=date(order_time);
+		select count(*) into t18 from userorder where date_format(time(order_time),'%H')=18 and date_add(date(now()),interval -2 day)=date(order_time);
+		select count(*) into t19 from userorder where date_format(time(order_time),'%H')=19 and date_add(date(now()),interval -2 day)=date(order_time);
+		select count(*) into t20 from userorder where date_format(time(order_time),'%H')=20 and date_add(date(now()),interval -2 day)=date(order_time);
+		select count(*) into t21 from userorder where date_format(time(order_time),'%H')=21 and date_add(date(now()),interval -2 day)=date(order_time);
+		select count(*) into t22 from userorder where date_format(time(order_time),'%H')=22 and date_add(date(now()),interval -2 day)=date(order_time);
+		insert into timespread values(t7,t8,t9,t10,t11,t12,t13,t14,t15,t16,t17,t18,t19,t20,t21,t22);
+	end;
+//
+DELIMITER ;
+
+
+DELIMITER //
+drop procedure if exists buyticket;
+create procedure buyticket(orderno varchar(30))
+	begin
+		declare username varchar(30);
+		declare ticketno varchar(30);
+		declare cost float(7,1);
+		select user_username,ticket_no into username,ticketno from userorder where order_no=orderno;
+		select ticket_money into cost from tickettable where ticket_no=ticketno;
+		/* select username,ticketno,cost; */
+	
+		start transaction;
+		update user set user_money=user_money-cost where user_username=username;
+		update userorder set order_flag=1 where order_no=orderno and order_flag=0;
+		update tickettable set ticket_flag1=1 where ticket_no=ticketno;
+		
+		commit;
+		select order_flag from userorder where order_no=orderno;
+	end;
+//
+DELIMITER ;
+
+DELIMITER //
+drop procedure if exists cancelorder;
+create procedure cancelorder(ticketno varchar(30),orderno varchar(30))
+	begin
+		declare S varchar(20);	
+		declare E varchar(20);
+		declare seatid varchar(20);
+		declare numS int default 0;
+		declare numE int default 0;
+		declare trainnum int default 0;
+		declare trainno varchar(20);
+		declare flag int;
+		declare shorttrainno varchar(30);
+		declare i int default 1;
+		declare j int;
+		declare k int default 0;
+		declare userorder_num int;/*找到userorder表中 某用户 订单的最大值*/
+		declare t_error int default 0;
+		declare continue handler for sqlexception SET t_error=1;  
+		
+		
+		
+		select station_start,station_end,seat_id,train_no
+		into S,E,seatid,trainno
+		from tickettable where ticket_no=ticketno;
+		
+		/*找最大站序*/
+		select train_num into trainnum from trainnotable where train_no=trainno and date(train_time1)=substring(ticketno,length(trainno)+1,8);
+		
+		
+		select station_order into numS from stationtable where train_no=trainno and station_start=S;
+		select station_order into numE from stationtable where train_no=trainno and station_start=E;
+		
+		
+		select left(ticketno,length(trainno)+8+5) into shorttrainno;
+
+		/*select numS,numE,trainno,seatid;*/
+		START TRANSACTION;
+			while i<=numS do
+				set j=numS+1;
+				while j<=trainnum do
+					update tickettable set ticket_flag2=1 where left(ticket_no,length(train_no)+5+8)=shorttrainno 
+					and right(ticket_no,4)=concat(LPAD(i,2,0),LPAD(j,2,0))
+					and ticket_flag1=0 and ticket_flag2=0; 
+						IF t_error = 1 THEN  
+							ROLLBACK;  
+						ELSE  
+							COMMIT;  
+						END IF;  
+					set j=j+1;
+				end while;
+				set i=i+1;
+			end while;	
+			
+			set i=numS+1;
+			while i<=numE-1 do
+				set j=i+1;
+				while j<=trainnum do
+					update tickettable set ticket_flag2=1 where left(ticket_no,length(train_no)+5+8)=shorttrainno 
+					and right(ticket_no,4)=concat(LPAD(i,2,0),LPAD(j,2,0))
+					and ticket_flag1=0 and ticket_flag2=0; 
+						IF t_error = 1 THEN  
+							ROLLBACK;  
+						ELSE  
+							COMMIT;  
+						END IF;  
+					set j=j+1;
+				end while;
+				set i=i+1;
+			end while;
+		select order_flag into flag from userorder where order_no=orderno;
+
+		IF flag=0 then
+			update userorder set order_flag=2 where order_no=orderno;
+			IF t_error = 1 THEN  
+				ROLLBACK;  
+			ELSE  
+				COMMIT;  
+			END IF; 
+		END IF;
+	end;
+//
+DELIMITER ;
+
+
+DELIMITER //
+drop procedure if exists everynightadd;
+create procedure everynightadd()
+	begin
+	
+		DECLARE trainno varchar(30);
+		DECLARE Done INT DEFAULT 0;
+		
+		declare time1 time;
+		declare time2 time;
+		declare date1 date;
+		declare date2 date;
+		declare finaldate1 date;
+		declare finaldate2 date;
+		declare trainstart varchar(20);
+		declare trainend varchar(20);
+		declare traintype varchar(20);
+		declare trainnum int;
+		declare trainusedtime time;
+		declare trainusedday int;
+		declare num1 int;
+		declare num2 int;
+		declare num3 int;
+		declare num4 int;
+		declare num5 int;
+		declare num6 int;
+		declare num7 int;
+		declare num8 int;
+		declare num9 int;
+		declare num10 int;
+		declare num11 int;
+		
+		DECLARE cur CURSOR FOR SELECT train_no FROM trainnotable group by train_no;
+		DECLARE CONTINUE HANDLER FOR SQLSTATE '02000' SET Done = 1;
+		
+		open cur;
+		fetch cur into trainno;
+		while Done<>1 do
+		
+			
+			select trainno;
+			select max(date(train_time2)) into date2 from trainnotable where train_no=trainno;
+			
+			select date_add(date2,interval 1 day) into finaldate2;
+			
+			select time(train_time1),time(train_time2),date(train_time1),
+			train_start ,train_end,train_type,
+			train_num ,train_used_time ,train_used_day ,
+			train_num1 ,train_num2 ,train_num3 ,train_num4 ,train_num5 ,train_num6 ,
+			train_num7 ,train_num8 ,train_num9 ,train_num10,train_num11 
+			into
+			time1,time2,date1,trainstart,trainend,traintype,trainnum,trainusedtime,trainusedday,
+			num1,num2,num3,num4,num5,num6,num7,num8,num9,num10,num11
+			from trainnotable where train_no=trainno and date(train_time2)=date2;
+
+			select date_add(date1,interval 1 day) into finaldate1;
+			select finaldate1,finaldate2;
+			insert into trainnotable values(trainno,trainstart,trainend,traintype,trainnum,
+			concat(finaldate1,' ',time1),concat(finaldate2,' ',time2),
+			trainusedtime,trainusedday,num1,num2,num3,num4,num5,num6,num7,num8,num9,num10,num11
+			);
+			call insertticket(trainno,date_format(finaldate1,'%Y%m%d'));
+			fetch cur into trainno;
+			end while;
+		close cur;
+	end;
+//
+DELIMITER ;
+
+
+DELIMITER //
+drop procedure if exists everynightdel;
+create procedure everynightdel()
+	begin
+		delete from trainnotable
+		where date(train_time1)<date_sub(date(now()),interval 5 day);
+		delete from tickettable
+		where substring(ticket_no,length(train_no)+1,8)<date_format(date_sub(date(now()),interval 5 day),'%Y%m%d');
+		delete from userorder
+		where date(order_time)<date_sub(date(now()),interval 4 day);
+	end; 
+//
+DELIMITER ;
+
+
+DELIMITER //
+drop procedure if exists insertticket;
+create procedure insertticket(trainno varchar(10),TT varchar(10))
+	begin
+		declare ticketno varchar(30);/*车票号=车次号+发车日期+时隔天数(2位)+座位id 5位补全0 +站序S(2位)*+站序E(2位)*/
+		declare ticketno2 varchar(30);
+		declare dada varchar(20);/*捕捉车次总发车时间的前8位*/
+		declare trainnum int default 0;/*站序最大值，就是车站的个数*/
+		declare x int default 1;  /*外循环*/
+		declare y int default 1;/*内循环*/
+		declare z int default 1;
+		declare seatnum int;/*座位总数*/
+		declare S varchar(20);/*车票起点*/
+		declare E varchar(20);/*车票终点*/
+		declare seattype varchar(20);/*座位类型中文字符串*/
+		declare ticketcost float(7,1) default 0;/*票价*/
+		declare useday int default null;
+		/*求出座位总和*/
+		select (ifnull(train_num1,0)+ifnull(train_num2,0)+ifnull(train_num3,0)+ifnull(train_num4,0)+
+		ifnull(train_num5,0)+ifnull(train_num6,0)+ifnull(train_num7,0)+ifnull(train_num8,0)+
+		ifnull(train_num9,0)+ifnull(train_num10,0)+ifnull(train_num11,0))
+		into seatnum
+		from trainnotable where train_no=trainno and date_format(train_time1,'%Y%m%d')=TT;
+
+		/* select seatnum; */
+		
+		/*找到发车日期*/
+		select DATE_FORMAT(train_time1,'%Y%m%d'),train_num
+		into dada,trainnum
+		from trainnotable where train_no=trainno and date_format(train_time1,'%Y%m%d')=TT;
+		
+		/* select trainnum; */
+		/*经过的天数，加入车票号*/
+		select station_time2_day into useday from stationtable where train_no=trainno and station_order=trainnum;
+		
+		/*循环生成车票  */
+		while x<=seatnum do
+			set ticketno=concat(trainno,dada,LPAD(x,5,0),LPAD(useday,2,0));
+			while y<trainnum do
+				
+				set z=y+1;
+				while z<=trainnum do
+					set seattype=null;
+					set ticketcost=0;
+					select station_start into S from stationtable where train_no=trainno and station_order=y;
+					select station_start into E from stationtable where train_no=trainno and station_order=z;
+					select seat_type into seattype from seattable where seat_id=x and train_no=trainno;
+					
+	
+					if seattype='商务座' then 
+						select cost_num1 into ticketcost from costtable where train_no=trainno and station_start=S and station_end=E;
+					
+					elseif seattype='特等座' then 
+						select cost_num2 into ticketcost from costtable where train_no=trainno and station_start=S and station_end=E;
+					
+					elseif seattype='一等座' then 
+						select cost_num3 into ticketcost from costtable where train_no=trainno and station_start=S and station_end=E;
+					
+					elseif seattype='二等座' then 
+						select cost_num4 into ticketcost from costtable where train_no=trainno and station_start=S and station_end=E;
+					
+					elseif seattype='高级软卧' then  
+						select cost_num5 into ticketcost from costtable where train_no=trainno and station_start=S and station_end=E;
+					
+					elseif seattype='软卧' then 
+						select cost_num6 into ticketcost from costtable where train_no=trainno and station_start=S and station_end=E;
+				
+					elseif seattype='硬卧' then   
+						select cost_num7 into ticketcost from costtable where train_no=trainno and station_start=S and station_end=E;
+					
+					elseif seattype='软座' then 
+						select cost_num8 into ticketcost from costtable where train_no=trainno and station_start=S and station_end=E;
+					
+					elseif seattype='硬座' then  
+						select cost_num9 into ticketcost from costtable where train_no=trainno and station_start=S and station_end=E;
+				
+					elseif seattype='无座' then 
+						select cost_num10 into ticketcost from costtable where train_no=trainno and station_start=S and station_end=E;
+				
+					else  
+						select cost_num11 into ticketcost from costtable where train_no=trainno and station_start=S and station_end=E;
+					end if;
+
+					
+					set ticketno2=null;
+					set ticketno2=concat(ticketno,LPAD(y,2,0),LPAD(z,2,0));
+					
+					insert into tickettable values(ticketno2,trainno,S,E,x,ticketcost,0,1);
+					set z=z+1;
+					
+				end while;
+				
+				set y=y+1;
+			end while;
+			set x=x+1;
+			set y=1;
+			set z=1;
+		end while;
+
+	end;
+//
+DELIMITER ;
+
+
+DELIMITER //
+drop procedure if exists checkrest;
+create procedure checkrest(trainno varchar(30),S varchar(30),E varchar(30),TT varchar(30),seattype varchar(30),username varchar(20))
+	begin	
+	declare daynum int;
+	declare TTT varchar(30);
+	declare ticketcount int default 0;
+	declare shortticketno varchar(30);
+	declare flag varchar(30) default 'x';
+		select station_time1_day into daynum from stationtable 
+		where train_no=trainno and station_start=S;
+		select date_format(date_sub(TT,interval daynum day),'%Y%m%d') into TTT;
+		
+		set shortticketno=concat(trainno,TTT);
+
+		select count(*) into ticketcount from tickettable 
+		where left(ticket_no,length(shortticketno))=shortticketno
+		and seat_id in (select seat_id from seattable where seat_type=seattype)
+		and station_start=S and station_end=E
+		and ticket_flag1=0 and ticket_flag2=1;
+		
+		if (ticketcount=0) then
+			select flag;
+		ELSE
+			set flag='y';
+			select flag;
+		END IF;
+	end;
+//
+DELIMITER ;
+
+DELIMITER //
+drop procedure if exists countrest;
+create procedure countrest()
+	begin
+		declare S varchar(20) default '';
+		declare E varchar(20) default '';
+		declare num int;
+		declare restnum int;
+		declare day0 varchar(20);
+		declare day1 varchar(20);
+		declare day2 varchar(20);
+		declare day3 varchar(20);
+		declare usedday int;
+		declare trainno varchar(20);
+		DECLARE Done INT DEFAULT 0;
+		declare stationtime2day int;
+		declare zong int;
+		DECLARE cur CURSOR FOR SELECT station_start,station_end FROM restticket;
+		DECLARE cur2 CURSOR FOR SELECT train_no,station_time2_day FROM ttt;
+		DECLARE CONTINUE HANDLER FOR SQLSTATE '02000' SET Done = 1;
+	
+	
+		select date_format(date_add(date(now()),interval 0 day),'%Y%m%d') into day0;
+		select date_format(date_add(date(now()),interval 1 day),'%Y%m%d') into day1;	
+		select date_format(date_add(date(now()),interval 2 day),'%Y%m%d') into day2;
+		select date_format(date_add(date(now()),interval 3 day),'%Y%m%d') into day3;
+		
+		open cur;
+		fetch cur into S,E;
+		while(S <>'#')do
+				drop table if exists ttt;
+				
+				Create TEMPORARY table ttt (Select train_no,station_time2_day from stationtable where left(station_start,2)=S);
+				insert into ttt value('#',0);
+				
+				set restnum=0;
+				set num=0;
+			
+				open cur2;
+				fetch cur2 into trainno,stationtime2day;
+				while(trainno<>'#')do
+					select count(*) into num from 
+					tickettable a 
+					where left(a.station_start,2)=S and left(a.station_end,2)=E
+					and a.ticket_flag1=0 and a.ticket_flag2=1
+					and a.train_no=trainno
+					and date_format(date_add(date_format(substring(a.ticket_no,length(a.train_no)+1,8),'%Y-%m-%d'),interval stationtime2day day),'%Y%m%d')=day0;
+					set restnum=restnum+num;
+					fetch cur2 into trainno,stationtime2day;
+					
+				end while;
+				close cur2;
+				update restticket set rest0=restnum
+				where station_end=E and station_start=S;
+				
+				drop table if exists ttt;
+				
+				Create TEMPORARY table ttt (Select train_no,station_time2_day from stationtable where left(station_start,2)=S);
+				insert into ttt value('#',0);
+				
+				set restnum=0;
+				set num=0;
+			
+				open cur2;
+				fetch cur2 into trainno,stationtime2day;
+				while(trainno<>'#')do
+					select count(*) into num from 
+					tickettable a 
+					where left(a.station_start,2)=S and left(a.station_end,2)=E
+					and a.ticket_flag1=0 and a.ticket_flag2=1
+					and a.train_no=trainno
+					and date_format(date_add(date_format(substring(a.ticket_no,length(a.train_no)+1,8),'%Y-%m-%d'),interval stationtime2day day),'%Y%m%d')=day1;
+					set restnum=restnum+num;
+					fetch cur2 into trainno,stationtime2day;
+					
+				end while;
+				close cur2;
+				update restticket set rest1=restnum
+				where station_end=E and station_start=S;
+				
+				drop table if exists ttt;
+				
+				Create TEMPORARY table ttt (Select train_no,station_time2_day from stationtable where left(station_start,2)=S);
+				insert into ttt value('#',0);
+				
+				set restnum=0;
+				set num=0;
+			
+				open cur2;
+				fetch cur2 into trainno,stationtime2day;
+				while(trainno<>'#')do
+					select count(*) into num from 
+					tickettable a 
+					where left(a.station_start,2)=S and left(a.station_end,2)=E
+					and a.ticket_flag1=0 and a.ticket_flag2=1
+					and a.train_no=trainno
+					and date_format(date_add(date_format(substring(a.ticket_no,length(a.train_no)+1,8),'%Y-%m-%d'),interval stationtime2day day),'%Y%m%d')=day2;
+					set restnum=restnum+num;
+					fetch cur2 into trainno,stationtime2day;
+					
+				end while;
+				close cur2;
+				update restticket set rest2=restnum
+				where station_end=E and station_start=S;
+				
+				drop table if exists ttt;
+				
+				Create TEMPORARY table ttt (Select train_no,station_time2_day from stationtable where left(station_start,2)=S);
+				insert into ttt value('#',0);
+				
+				set restnum=0;
+				set num=0;
+			
+				open cur2;
+				fetch cur2 into trainno,stationtime2day;
+				while(trainno<>'#')do
+					select count(*) into num from 
+					tickettable a 
+					where left(a.station_start,2)=S and left(a.station_end,2)=E
+					and a.ticket_flag1=0 and a.ticket_flag2=1
+					and a.train_no=trainno
+					and date_format(date_add(date_format(substring(a.ticket_no,length(a.train_no)+1,8),'%Y-%m-%d'),interval stationtime2day day),'%Y%m%d')=day3;
+					set restnum=restnum+num;
+					fetch cur2 into trainno,stationtime2day;
+					
+				end while;
+				close cur2;
+				update restticket set rest3=restnum
+				where station_end=E and station_start=S;
+				
+				
+				fetch cur into S,E;
+     	end while;
+			
+
+		close cur;
+		
+	end;
+//
+DELIMITER ;
+
+DELIMITER //
+drop procedure if exists recharge;
+create procedure recharge(username varchar(20),cardno varchar(20),cardmoney double)
+begin
+update cardtable set card_flag=1 where card_id=cardno;
+update user set user_money=user_money+cardmoney where user_username=username;
+end;
+//
+DELIMITER ;
+
+DELIMITER //
+drop procedure if exists orderticket;
+create procedure orderticket(trainno varchar(10),S varchar(20),E varchar(20),TT varchar(20),seattype varchar(10),username varchar(20))
+	begin
+		
+		/*TT 要出行的日子 %Y%m%d */
+		/*seattype 是一个整形，从1到11代表11种座位*/
+		declare trainnum int default null;/*站序最大值，就是车站的个数*/
+		declare dada varchar(20);/*捕捉车次总发车时间的前8位*/
+		declare numS int default 0;
+		declare numE int default 0;
+		declare orderno varchar(30);
+		declare ticketno varchar(30);
+		declare ordertime datetime;   /*下单时间=系统时间*/
+		declare useday int default null;/*全部行程用日*/
+		declare t_error int default 0;
+		declare k_error int default 0;
+		declare flag int default 0;
+		declare res varchar(30) default '*';
+		declare shorttrainno varchar(30);/*包含座位id，车票号的前半段*/
+		declare i int default 1;
+		declare j int;
+		declare k int default 0;
+		declare tablename varchar(40);
+		declare str varchar(300);
+		
+		declare userorder_num int;/*找到userorder表中 某用户 订单的最大值*/
+		declare continue handler for sqlexception SET t_error=1;  
+		
+		
+		/*计算出列车第一站出发的日期，为了定位到确定的一列车次*/
+		select date_format(date_sub(TT,interval station_time1_day day),'%Y%m%d') into dada from stationtable where train_no=trainno and station_start=S;
+
+		/*系统时间*/
+		
+		select now() into ordertime;
+		/*查询最大站序，用户选择的日期一定要在车次表里两个日期之间 确定唯一*/
+		select train_num into trainnum from trainnotable where train_no=trainno and 
+		DATE_FORMAT(train_time1,'%Y%m%d')=dada;
+		
+		/*找到两个地点的站序编号*/
+		select station_order into numS from stationtable where train_no=trainno and station_start=S;
+		select station_order into numE from stationtable where train_no=trainno and station_start=E;
+		
+		
+		select ticket_no,ticket_flag2 into ticketno,flag from tickettable where train_no=trainno 
+		and right(ticket_no,4)=concat(LPAD(numS,2,0),LPAD(numE,2,0)) 
+		and ticket_flag1=0 and ticket_flag2=1 and substring(ticket_no,length(trainno)+1,8)=dada
+		and substring(ticket_no,length(trainno)+9,5)+0 in (select seat_id from seattable where seat_type=seattype)
+		limit 1
+		;
+
+		/*截取座位id*/
+		select left(ticketno,length(trainno)+8+5) into shorttrainno;
+
+		START TRANSACTION;
+			while i<=numS do
+				set j=numS+1;
+				while j<=trainnum do
+					update tickettable set ticket_flag2=0 where left(ticket_no,length(train_no)+5+8)=shorttrainno 
+					and right(ticket_no,4)=concat(LPAD(i,2,0),LPAD(j,2,0))
+					and ticket_flag1=0 and ticket_flag2=1;
+						IF t_error = 1 THEN  
+							ROLLBACK;  
+						ELSE  
+							set k=1;
+							COMMIT;  
+						END IF;  
+					set j=j+1;
+				end while;
+				set i=i+1;
+			end while;	
+			
+			set i=numS+1;
+			while i<=numE-1 do
+				set j=i+1;
+				while j<=trainnum do
+					update tickettable set ticket_flag2=0 where left(ticket_no,length(train_no)+5+8)=shorttrainno 
+					and right(ticket_no,4)=concat(LPAD(i,2,0),LPAD(j,2,0))
+					and ticket_flag1=0 and ticket_flag2=1; 
+						IF t_error = 1 THEN  
+							ROLLBACK;  
+						ELSE  
+							COMMIT;
+						END IF;  
+					set j=j+1;
+				end while;
+				set i=i+1;
+			end while;
+			
+			select ifnull(max(substring_index(order_no,'#',-1)),0)+1  into userorder_num from userorder; 
+			set orderno=concat(username,'#',LPAD(userorder_num,6,0));
+			IF flag=1 THEN
+				insert into userorder values(orderno,ticketno,ordertime,0,username);
+				IF t_error = 1 THEN  
+					ROLLBACK;  
+				ELSE  
+					COMMIT;  
+					set res='#';
+					select concat(res,orderno);
+				END IF; 
+			END IF; 
+
+	end;
+//
+DELIMITER ;
+
+
+DELIMITER //
+drop procedure if exists cancelticket;
+create procedure cancelticket(orderno varchar(30))
+	begin
+		declare username varchar(30);
+		declare ticketno varchar(30);
+		declare cost float(7,1);
+		declare trainno varchar(20);
+		declare trainnum int;
+		declare numS int;
+		declare numE int;
+		declare S varchar(20);
+		declare E varchar(20);
+		declare shorttrainno varchar(30);
+		declare i int default 1;
+		declare j int;
+		declare R varchar(10) default '*';
+		declare t_error int default 0;
+		declare continue handler for sqlexception SET t_error=1;  
+		
+		
+		
+		select user_username,ticket_no into username,ticketno from userorder where order_no=orderno;
+		select ticket_money into cost from tickettable where ticket_no=ticketno;
+		
+		select train_no,station_start,station_end into trainno,S,E from tickettable where ticket_no=ticketno;
+		
+		select train_num into trainnum from trainnotable where date(train_time1)=substring(ticketno,length(trainno)+1,8) and train_no=trainno;
+		select station_order into numS from stationtable where train_no=trainno and station_start=S;
+		select station_order into numE from stationtable where train_no=trainno and station_start=E;
+		select left(ticketno,length(trainno)+8+5) into shorttrainno;
+		
+		START TRANSACTION;
+			while i<=numS do
+				set j=numS+1;
+				while j<=trainnum do
+					update tickettable set ticket_flag1=0,ticket_flag2=1 where left(ticket_no,length(train_no)+5+8)=shorttrainno 
+					and right(ticket_no,4)=concat(LPAD(i,2,0),LPAD(j,2,0))
+					and ticket_flag1=0 and ticket_flag2=0; 
+						IF t_error = 1 THEN  
+							ROLLBACK;  
+						ELSE  
+							COMMIT;  
+						END IF;  
+					set j=j+1;
+				end while;
+				set i=i+1;
+			end while;	
+			
+			set i=numS+1;
+			while i<=numE-1 do
+				set j=i+1;
+				while j<=trainnum do
+					update tickettable set ticket_flag1=0,ticket_flag2=1 where left(ticket_no,length(train_no)+5+8)=shorttrainno 
+					and right(ticket_no,4)=concat(LPAD(i,2,0),LPAD(j,2,0))
+					and ticket_flag1=0 and ticket_flag2=0; 
+						IF t_error = 1 THEN  
+							ROLLBACK;  
+						ELSE  
+							COMMIT;  
+						END IF;  
+					set j=j+1;
+				end while;
+				set i=i+1;
+			end while;
+			
+			update tickettable set ticket_flag1=0 and ticket_flag2=1 where ticket_no=ticketno;
+			update user set user_money=user_money+cost where user_username=username;
+			update userorder set order_flag=3 where order_no=orderno;
+			update tickettable set ticket_flag1=0,ticket_flag2=1 where ticket_no=ticketno;
+			
+			IF t_error = 1 THEN  
+				ROLLBACK;  
+			ELSE  
+				COMMIT;
+				set R='#';
+				select R;
+			END IF;
+	end;
+//
+DELIMITER ;
+
+
+
+drop event if exists autotask;
+create event autotask on schedule EVERY 1 SECOND
+on completion preserve do 
+update userorder set order_flag=4 where order_flag=0 and timestampdiff(second, order_time,now())>=1800;
+
+
+drop event if exists autotask2;
+create event autotask2 on schedule EVERY 1 second
+on completion preserve do 
+update userorder set order_flag=5 where order_flag=1 and order_no in (
+select x.order_no from( 
+select a.order_no from userorder a,tickettable b,stationtable c
+where a.ticket_no=b.ticket_no 
+and a.order_flag=1
+and b.station_start=c.station_start 
+and b.train_no=c.train_no
+and now()>concat(date(date_add(date_format(substring(b.ticket_no,length(b.train_no)+1,8),'%Y-%m-%d'),interval station_time2_day day)),' ',time(station_time2)))x);
+
+
+
+drop event if exists autoaddticket;
+create event autoaddticket on schedule 
+EVERY 1 day starts '2016-03-02 23:05:00'
+do call everynightadd();
+

@@ -1,0 +1,4 @@
+drop event if exists autocountrest;
+create event autocountrest on schedule EVERY 1800 second
+on completion preserve do 
+call countrest();

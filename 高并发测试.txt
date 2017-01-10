@@ -1,0 +1,14 @@
+DELIMITER //
+drop procedure if exists concurrent_order;
+create procedure concurrent_order()
+	begin
+		START TRANSACTION;
+		call orderticket('G102','济南西','北京南','20160412','商务座','1');
+		call orderticket('Z99','上海虹桥','广州东','20160413','商务座','1');
+		
+	end;
+//
+DELIMITER ;
+
+
+

@@ -1,0 +1,9 @@
+DELIMITER //
+drop procedure if exists recharge;
+create procedure recharge(username varchar(20),cardno varchar(20),cardmoney double)
+begin
+update cardtable set card_flag=1 where card_id=cardno;
+update user set user_money=user_money+cardmoney where user_username=username;
+end;
+//
+DELIMITER ;

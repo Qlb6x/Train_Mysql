@@ -1,0 +1,77 @@
+DELIMITER //
+drop procedure if exists updatetime;
+create procedure updatetime()
+	begin
+		declare t7 int;
+		declare t8 int;
+		declare t9 int;
+		declare t10 int;
+		declare t11 int;
+		declare t12 int;
+		declare t13 int;
+		declare t14 int;
+		declare t15 int;
+		declare t16 int;
+		declare t17 int;
+		declare t18 int;
+		declare t19 int;
+		declare t20 int;
+		declare t21 int;
+		declare t22 int;
+		delete from timespread;
+		select count(*) into t7 from userorder where date_format(order_time,'%H')=7 and date(now())=date(order_time);
+		select count(*) into t8 from userorder where date_format(order_time,'%H')=8 and date(now())=date(order_time);
+		select count(*) into t9 from userorder where date_format(order_time,'%H')=9 and date(now())=date(order_time);
+		select count(*) into t10 from userorder where date_format(order_time,'%H')=10 and date(now())=date(order_time);
+		select count(*) into t11 from userorder where date_format(order_time,'%H')=11 and date(now())=date(order_time);
+		select count(*) into t12 from userorder where date_format(order_time,'%H')=12 and date(now())=date(order_time);
+		select count(*) into t13 from userorder where date_format(order_time,'%H')=13 and date(now())=date(order_time);
+		select count(*) into t14 from userorder where date_format(order_time,'%H')=14 and date(now())=date(order_time);
+		select count(*) into t15 from userorder where date_format(order_time,'%H')=15 and date(now())=date(order_time);
+		select count(*) into t16 from userorder where date_format(order_time,'%H')=16 and date(now())=date(order_time);
+		select count(*) into t17 from userorder where date_format(order_time,'%H')=17 and date(now())=date(order_time);
+		select count(*) into t18 from userorder where date_format(order_time,'%H')=18 and date(now())=date(order_time);
+		select count(*) into t19 from userorder where date_format(order_time,'%H')=19 and date(now())=date(order_time);
+		select count(*) into t20 from userorder where date_format(order_time,'%H')=20 and date(now())=date(order_time);
+		select count(*) into t21 from userorder where date_format(order_time,'%H')=21 and date(now())=date(order_time);
+		select count(*) into t22 from userorder where date_format(order_time,'%H')=22 and date(now())=date(order_time);
+		insert into timespread values(t7,t8,t9,t10,t11,t12,t13,t14,t15,t16,t17,t18,t19,t20,t21,t22);
+		
+		select count(*) into t7 from userorder where date_format(order_time,'%H')=7 and date_add(date(now()),interval -1 day)=date(order_time);
+		select count(*) into t8 from userorder where date_format(order_time,'%H')=8 and date_add(date(now()),interval -1 day)=date(order_time);
+		select count(*) into t9 from userorder where date_format(order_time,'%H')=9 and date_add(date(now()),interval -1 day)=date(order_time);
+		select count(*) into t10 from userorder where date_format(order_time,'%H')=10 and date_add(date(now()),interval -1 day)=date(order_time);
+		select count(*) into t11 from userorder where date_format(order_time,'%H')=11 and date_add(date(now()),interval -1 day)=date(order_time);
+		select count(*) into t12 from userorder where date_format(order_time,'%H')=12 and date_add(date(now()),interval -1 day)=date(order_time);
+		select count(*) into t13 from userorder where date_format(order_time,'%H')=13 and date_add(date(now()),interval -1 day)=date(order_time);
+		select count(*) into t14 from userorder where date_format(order_time,'%H')=14 and date_add(date(now()),interval -1 day)=date(order_time);
+		select count(*) into t15 from userorder where date_format(order_time,'%H')=15 and date_add(date(now()),interval -1 day)=date(order_time);
+		select count(*) into t16 from userorder where date_format(order_time,'%H')=16 and date_add(date(now()),interval -1 day)=date(order_time);
+		select count(*) into t17 from userorder where date_format(order_time,'%H')=17 and date_add(date(now()),interval -1 day)=date(order_time);
+		select count(*) into t18 from userorder where date_format(order_time,'%H')=18 and date_add(date(now()),interval -1 day)=date(order_time);
+		select count(*) into t19 from userorder where date_format(order_time,'%H')=19 and date_add(date(now()),interval -1 day)=date(order_time);
+		select count(*) into t20 from userorder where date_format(order_time,'%H')=20 and date_add(date(now()),interval -1 day)=date(order_time);
+		select count(*) into t21 from userorder where date_format(order_time,'%H')=21 and date_add(date(now()),interval -1 day)=date(order_time);
+		select count(*) into t22 from userorder where date_format(order_time,'%H')=22 and date_add(date(now()),interval -1 day)=date(order_time);
+		insert into timespread values(t7,t8,t9,t10,t11,t12,t13,t14,t15,t16,t17,t18,t19,t20,t21,t22);
+		
+		select count(*) into t7 from userorder where date_format(order_time,'%H')=7 and date_add(date(now()),interval -2 day)=date(order_time);
+		select count(*) into t8 from userorder where date_format(order_time,'%H')=8 and date_add(date(now()),interval -2 day)=date(order_time);
+		select count(*) into t9 from userorder where date_format(order_time,'%H')=9 and date_add(date(now()),interval -2 day)=date(order_time);
+		select count(*) into t10 from userorder where date_format(order_time,'%H')=10 and date_add(date(now()),interval -2 day)=date(order_time);
+		select count(*) into t11 from userorder where date_format(order_time,'%H')=11 and date_add(date(now()),interval -2 day)=date(order_time);
+		select count(*) into t12 from userorder where date_format(order_time,'%H')=12 and date_add(date(now()),interval -2 day)=date(order_time);
+		select count(*) into t13 from userorder where date_format(order_time,'%H')=13 and date_add(date(now()),interval -2 day)=date(order_time);
+		select count(*) into t14 from userorder where date_format(order_time,'%H')=14 and date_add(date(now()),interval -2 day)=date(order_time);
+		select count(*) into t15 from userorder where date_format(order_time,'%H')=15 and date_add(date(now()),interval -2 day)=date(order_time);
+		select count(*) into t16 from userorder where date_format(order_time,'%H')=16 and date_add(date(now()),interval -2 day)=date(order_time);
+		select count(*) into t17 from userorder where date_format(order_time,'%H')=17 and date_add(date(now()),interval -2 day)=date(order_time);
+		select count(*) into t18 from userorder where date_format(order_time,'%H')=18 and date_add(date(now()),interval -2 day)=date(order_time);
+		select count(*) into t19 from userorder where date_format(order_time,'%H')=19 and date_add(date(now()),interval -2 day)=date(order_time);
+		select count(*) into t20 from userorder where date_format(order_time,'%H')=20 and date_add(date(now()),interval -2 day)=date(order_time);
+		select count(*) into t21 from userorder where date_format(order_time,'%H')=21 and date_add(date(now()),interval -2 day)=date(order_time);
+		select count(*) into t22 from userorder where date_format(order_time,'%H')=22 and date_add(date(now()),interval -2 day)=date(order_time);
+		insert into timespread values(t7,t8,t9,t10,t11,t12,t13,t14,t15,t16,t17,t18,t19,t20,t21,t22);
+	end;
+//
+DELIMITER ;

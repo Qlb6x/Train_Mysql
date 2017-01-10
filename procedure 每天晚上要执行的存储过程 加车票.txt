@@ -1,0 +1,68 @@
+DELIMITER //
+drop procedure if exists everynightadd;
+create procedure everynightadd()
+	begin
+	
+		DECLARE trainno varchar(30);
+		DECLARE Done INT DEFAULT 0;
+		
+		declare time1 time;
+		declare time2 time;
+		declare date1 date;
+		declare date2 date;
+		declare finaldate1 date;
+		declare finaldate2 date;
+		declare trainstart varchar(20);
+		declare trainend varchar(20);
+		declare traintype varchar(20);
+		declare trainnum int;
+		declare trainusedtime time;
+		declare trainusedday int;
+		declare num1 int;
+		declare num2 int;
+		declare num3 int;
+		declare num4 int;
+		declare num5 int;
+		declare num6 int;
+		declare num7 int;
+		declare num8 int;
+		declare num9 int;
+		declare num10 int;
+		declare num11 int;
+		
+		DECLARE cur CURSOR FOR SELECT train_no FROM trainnotable group by train_no;
+		DECLARE CONTINUE HANDLER FOR SQLSTATE '02000' SET Done = 1;
+		
+		open cur;
+		fetch cur into trainno;
+		while Done<>1 do
+		
+			
+			select trainno;
+			select max(date(train_time2)) into date2 from trainnotable where train_no=trainno;
+			
+			select date_add(date2,interval 1 day) into finaldate2;
+			
+			select time(train_time1),time(train_time2),date(train_time1),
+			train_start ,train_end,train_type,
+			train_num ,train_used_time ,train_used_day ,
+			train_num1 ,train_num2 ,train_num3 ,train_num4 ,train_num5 ,train_num6 ,
+			train_num7 ,train_num8 ,train_num9 ,train_num10,train_num11 
+			into
+			time1,time2,date1,trainstart,trainend,traintype,trainnum,trainusedtime,trainusedday,
+			num1,num2,num3,num4,num5,num6,num7,num8,num9,num10,num11
+			from trainnotable where train_no=trainno and date(train_time2)=date2;
+
+			select date_add(date1,interval 1 day) into finaldate1;
+			select finaldate1,finaldate2;
+			insert into trainnotable values(trainno,trainstart,trainend,traintype,trainnum,
+			concat(finaldate1,' ',time1),concat(finaldate2,' ',time2),
+			trainusedtime,trainusedday,num1,num2,num3,num4,num5,num6,num7,num8,num9,num10,num11
+			);
+			call insertticket(trainno,date_format(finaldate1,'%Y%m%d'));
+			fetch cur into trainno;
+			end while;
+		close cur;
+	end;
+//
+DELIMITER ;

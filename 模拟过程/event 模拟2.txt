@@ -1,0 +1,4 @@
+drop event if exists everyday_testevent2;
+create event everyday_testevent2 on schedule 
+EVERY 1 day starts '2016-03-20 09:00:00'
+do call everyday_test1;

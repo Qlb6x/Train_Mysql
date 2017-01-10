@@ -1,0 +1,105 @@
+DELIMITER //
+drop procedure if exists insertticket;
+create procedure insertticket(trainno varchar(10),TT varchar(10))
+	begin
+		declare ticketno varchar(30);/*车票号=车次号+发车日期+时隔天数(2位)+座位id 5位补全0 +站序S(2位)*+站序E(2位)*/
+		declare ticketno2 varchar(30);
+		declare dada varchar(20);/*捕捉车次总发车时间的前8位*/
+		declare trainnum int default 0;/*站序最大值，就是车站的个数*/
+		declare x int default 1;  /*外循环*/
+		declare y int default 1;/*内循环*/
+		declare z int default 1;
+		declare seatnum int;/*座位总数*/
+		declare S varchar(20);/*车票起点*/
+		declare E varchar(20);/*车票终点*/
+		declare seattype varchar(20);/*座位类型中文字符串*/
+		declare ticketcost float(7,1) default 0;/*票价*/
+		declare useday int default null;
+		/*求出座位总和*/
+		select (ifnull(train_num1,0)+ifnull(train_num2,0)+ifnull(train_num3,0)+ifnull(train_num4,0)+
+		ifnull(train_num5,0)+ifnull(train_num6,0)+ifnull(train_num7,0)+ifnull(train_num8,0)+
+		ifnull(train_num9,0)+ifnull(train_num10,0)+ifnull(train_num11,0))
+		into seatnum
+		from trainnotable where train_no=trainno and date_format(train_time1,'%Y%m%d')=TT;
+
+		/* select seatnum; */
+		
+		/*找到发车日期*/
+		select DATE_FORMAT(train_time1,'%Y%m%d'),train_num
+		into dada,trainnum
+		from trainnotable where train_no=trainno and date_format(train_time1,'%Y%m%d')=TT;
+		
+		/* select trainnum; */
+		/*经过的天数，加入车票号*/
+		select station_time2_day into useday from stationtable where train_no=trainno and station_order=trainnum;
+		
+		/*循环生成车票  */
+		while x<=seatnum do
+			set ticketno=concat(trainno,dada,LPAD(x,5,0),LPAD(useday,2,0));
+			while y<trainnum do
+				
+				set z=y+1;
+				while z<=trainnum do
+					set seattype=null;
+					set ticketcost=0;
+					select station_start into S from stationtable where train_no=trainno and station_order=y;
+					select station_start into E from stationtable where train_no=trainno and station_order=z;
+					select seat_type into seattype from seattable where seat_id=x and train_no=trainno;
+					
+	
+					if seattype='商务座' then 
+						select cost_num1 into ticketcost from costtable where train_no=trainno and station_start=S and station_end=E;
+					
+					elseif seattype='特等座' then 
+						select cost_num2 into ticketcost from costtable where train_no=trainno and station_start=S and station_end=E;
+					
+					elseif seattype='一等座' then 
+						select cost_num3 into ticketcost from costtable where train_no=trainno and station_start=S and station_end=E;
+					
+					elseif seattype='二等座' then 
+						select cost_num4 into ticketcost from costtable where train_no=trainno and station_start=S and station_end=E;
+					
+					elseif seattype='高级软卧' then  
+						select cost_num5 into ticketcost from costtable where train_no=trainno and station_start=S and station_end=E;
+					
+					elseif seattype='软卧' then 
+						select cost_num6 into ticketcost from costtable where train_no=trainno and station_start=S and station_end=E;
+				
+					elseif seattype='硬卧' then   
+						select cost_num7 into ticketcost from costtable where train_no=trainno and station_start=S and station_end=E;
+					
+					elseif seattype='软座' then 
+						select cost_num8 into ticketcost from costtable where train_no=trainno and station_start=S and station_end=E;
+					
+					elseif seattype='硬座' then  
+						select cost_num9 into ticketcost from costtable where train_no=trainno and station_start=S and station_end=E;
+				
+					elseif seattype='无座' then 
+						select cost_num10 into ticketcost from costtable where train_no=trainno and station_start=S and station_end=E;
+				
+					else  
+						select cost_num11 into ticketcost from costtable where train_no=trainno and station_start=S and station_end=E;
+					end if;
+
+					
+					set ticketno2=null;
+					set ticketno2=concat(ticketno,LPAD(y,2,0),LPAD(z,2,0));
+					
+					insert into tickettable values(ticketno2,trainno,S,E,x,ticketcost,0,1);
+					set z=z+1;
+					
+				end while;
+				
+				set y=y+1;
+			end while;
+			set x=x+1;
+			set y=1;
+			set z=1;
+		end while;
+
+	end;
+//
+DELIMITER ;
+
+call insertticket('G102','20160212');
+call insertticket('G102','20160215');

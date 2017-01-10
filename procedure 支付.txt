@@ -1,0 +1,26 @@
+DELIMITER //
+drop procedure if exists buyticket;
+create procedure buyticket(orderno varchar(30))
+	begin
+		declare username varchar(30);
+		declare ticketno varchar(30);
+		declare cost float(7,1);
+		select user_username,ticket_no into username,ticketno from userorder where order_no=orderno;
+		select ticket_money into cost from tickettable where ticket_no=ticketno;
+		/* select username,ticketno,cost; */
+	
+		start transaction;
+		update user set user_money=user_money-cost where user_username=username;
+		update userorder set order_flag=1 where order_no=orderno and order_flag=0;
+		update tickettable set ticket_flag1=1 where ticket_no=ticketno;
+		
+		commit;
+		select order_flag from userorder where order_no=orderno;
+	end;
+//
+DELIMITER ;
+
+
+call buyticket('1#000001');
+
+

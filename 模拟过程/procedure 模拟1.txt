@@ -1,0 +1,16 @@
+DELIMITER //
+drop procedure if exists everyday_test1;
+create procedure everyday_test1()
+	begin
+		declare da varchar(30);
+		select date_format(date(now()),'%Y%m%d') into da;
+		call orderticket('G102','南京南','滁州',da,'一等座','1');
+
+	end;
+//
+DELIMITER ;
+
+
+
+
+		

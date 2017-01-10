@@ -1,0 +1,161 @@
+注意火车票的预售期
+insert into trainnotable values
+('G102','上海虹桥','北京南','高铁',9,'20160229064300','20160303021800','05:35:00',2,2,null,3,4,null,null,null,null,null,null,null);
+insert into trainnotable values
+('G102','上海虹桥','北京南','高铁',9,'20160304064300','20160306121800','05:35:00',2,2,null,3,4,null,null,null,null,null,null,null);
+insert into trainnotable values
+('G102','上海虹桥','北京南','高铁',9,'20160307064300','20160309121800','05:35:00',2,2,null,3,4,null,null,null,null,null,null,null);
+
+
+插入所有车站
+insert into stationtable values
+('G102','上海虹桥',1,'高铁',null,0,'064300',0);
+insert into stationtable values
+('G102','苏州北',2,'高铁','070600',0,'070800',0);
+insert into stationtable values
+('G102','常州北',3,'高铁','073000',0,'073200',0);
+insert into stationtable values
+('G102','南京南',4,'高铁','080600',0,'080900',0);
+insert into stationtable values
+('G102','滁州',5,'高铁','082700',0,'082900',0);
+insert into stationtable values
+('G102','枣庄',6,'高铁','094300',0,'094600',0);
+insert into stationtable values
+('G102','济南西',7,'高铁','103600',0,'103900',0);
+insert into stationtable values
+('G102','德州东',8,'高铁','110300',0,'110500',0);
+insert into stationtable values
+('G102','北京南',9,'高铁','121800',0,'121800',0);
+
+假数据
+insert into stationtable values
+('G102','上海虹桥',1,'高铁',null,0,'064300',0);
+insert into stationtable values
+('G102','苏州北',2,'高铁','070600',1,'070800',1);
+insert into stationtable values
+('G102','常州北',3,'高铁','073000',1,'073200',1);
+insert into stationtable values
+('G102','南京南',4,'高铁','080600',1,'080900',1);
+insert into stationtable values
+('G102','滁州',5,'高铁','082700',1,'082900',2);
+insert into stationtable values
+('G102','枣庄',6,'高铁','094300',2,'094600',2);
+insert into stationtable values
+('G102','济南西',7,'高铁','103600',2,'103900',2);
+insert into stationtable values
+('G102','德州东',8,'高铁','110300',2,'110500',2);
+insert into stationtable values
+('G102','北京南',9,'高铁','121800',2,'121800',2);
+
+
+插入票价信息
+insert into costtable values
+('G102','上海虹桥','苏州北',119.5,null,64.5,34.5,null,null,null,null,null,null,null);
+insert into costtable values
+('G102','上海虹桥','常州北',119.5,null,64.5,34.5,null,null,null,null,null,null,null);
+insert into costtable values
+('G102','上海虹桥','南京南',119.5,null,64.5,34.5,null,null,null,null,null,null,null);
+insert into costtable values
+('G102','上海虹桥','滁州',514.5,null,274.5,164.5,null,null,null,null,null,null,null);
+insert into costtable values
+('G102','上海虹桥','枣庄',974.0,null,519.5,309.5,null,null,null,null,null,null,null);
+insert into costtable values
+('G102','上海虹桥','济南西',1263.5,null,673.5,398.5,null,null,null,null,null,null,null);
+insert into costtable values
+('G102','上海虹桥','德州东',1383.5,null,738.5,438.5,null,null,null,null,null,null,null);
+insert into costtable values
+('G102','上海虹桥','北京南',1748.0,null,933.0,553.0,null,null,null,null,null,null,null);
+insert into costtable values
+('G102','苏州北','常州北',119.5,null,64.5,39.5,null,null,null,null,null,null,null);
+insert into costtable values
+('G102','苏州北','南京南',309.5,null,164.5,99.5,null,null,null,null,null,null,null);
+insert into costtable values
+('G102','苏州北','滁州',394.5,null,134.5,84.5,null,null,null,null,null,null,null);
+insert into costtable values
+('G102','苏州北','枣庄',869.0,null,464.5,274.0,null,null,null,null,null,null,null);
+insert into costtable values
+('G102','苏州北','济南西',1159.0,null,619.0,364.0,null,null,null,null,null,null,null);
+insert into costtable values
+('G102','苏州北','德州东',1278.5,null,678.5,403.5,null,null,null,null,null,null,null);
+insert into costtable values
+('G102','苏州北','北京南',1653.5,null,883.5,523.5,null,null,null,null,null,null,null);
+insert into costtable values
+('G102','常州北','南京南',189.5,null,99.5,59.5,null,null,null,null,null,null,null);
+insert into costtable values
+('G102','常州北','滁州',274.5,null,144.5,84.5,null,null,null,null,null,null,null);
+insert into costtable values
+('G102','常州北','枣庄',759.0,null,404.0,239.0,null,null,null,null,null,null,null);
+insert into costtable values
+('G102','常州北','济南西',1049.0,null,559.0,334.0,null,null,null,null,null,null,null);
+insert into costtable values
+('G102','常州北','德州东',1169.0,null,624.0,369.0,null,null,null,null,null,null,null);
+insert into costtable values
+('G102','常州北','北京南',1553.5,null,828.5,493.5,null,null,null,null,null,null,null);
+insert into costtable values
+('G102','南京南','滁州',84.5,null,44.5,24.5,null,null,null,null,null,null,null);
+insert into costtable values
+('G102','南京南','枣庄',574.5,null,304.5,179.5,null,null,null,null,null,null,null);
+insert into costtable values
+('G102','南京南','济南西',879.0,null,469.0,279.0,null,null,null,null,null,null,null);
+insert into costtable values
+('G102','南京南','德州东',999.0,null,534.0,314.0,null,null,null,null,null,null,null);
+insert into costtable values
+('G102','南京南','北京南',1403.5,null,748.5,443.5,null,null,null,null,null,null,null);
+insert into costtable values
+('G102','滁州','枣庄',489.5,null,259.5,154.5,null,null,null,null,null,null,null);
+insert into costtable values
+('G102','滁州','济南西',799.0,null,429.0,254.0,null,null,null,null,null,null,null);
+insert into costtable values
+('G102','滁州','德州东',919.0,null,489.10,289.0,null,null,null,null,null,null,null);
+insert into costtable values
+('G102','滁州','北京南',919.0,null,489.0,289.0,null,null,null,null,null,null,null);
+insert into costtable values
+('G102','枣庄','济南西',319.5,null,169.5,99.5,null,null,null,null,null,null,null);
+insert into costtable values
+('G102','枣庄','德州东',454.5,null,239.5,144.5,null,null,null,null,null,null,null);
+insert into costtable values
+('G102','枣庄','北京南',889.0,null,474.0,284.0,null,null,null,null,null,null,null);
+insert into costtable values
+('G102','济南西','德州东',134.5,null,69.5,39.5,null,null,null,null,null,null,null);
+insert into costtable values
+('G102','济南西','北京南',589.5,null,314.5,184.5,null,null,null,null,null,null,null);
+insert into costtable values
+('G102','德州东','北京南',454.5,null,244.5,144.5,null,null,null,null,null,null,null);
+
+插入座位信息
+insert into seattable values
+('1','G102','商务座','01','01');
+insert into seattable values
+('2','G102','商务座','01','02');
+insert into seattable values
+('3','G102','一等座','02','01');
+insert into seattable values
+('4','G102','一等座','02','02');
+insert into seattable values
+('5','G102','一等座','02','03');
+insert into seattable values
+('6','G102','二等座','03','01');
+insert into seattable values
+('7','G102','二等座','03','02');
+insert into seattable values
+('8','G102','二等座','03','03');
+insert into seattable values
+('9','G102','二等座','03','04');
+
+
+
+插入的充值卡：
+insert into cardtable values ('HCPCZK000000ZZZ','MaS493EKLy',0,100);
+insert into cardtable values ('HCPCZK000001ZZZ','ojgFnBtsKL',0,100);
+insert into cardtable values ('HCPCZK000002ZZZ','tfmd5gs6f3',0,100);
+insert into cardtable values ('HCPCZK000003ZZZ','ojRQGoq4OC',0,100);
+insert into cardtable values ('HCPCZK000004ZZZ','YUspp4T8g9',0,100);
+insert into cardtable values ('HCPCZK000005ZZZ','w1jsvAwbxS',0,100);
+insert into cardtable values ('HCPCZK000006ZZZ','nAw3mOOqlA',0,100);
+insert into cardtable values ('HCPCZK000007ZZZ','nAw3mOOqlA',0,100);
+
+
+插入的订单
+insert into userorder values('1#000001','11111','2016-2-12 13:15:40',0,'1');
+insert into userorder values('1#000002','11111','2016-2-12 13:15:40',0,'1');
+insert into userorder values('1#000003','11111','2016-2-12 13:15:40',0,'1');

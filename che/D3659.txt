@@ -1,0 +1,252 @@
+insert into trainnotable values
+('D3695','南宁东','广州南','动车',5,'20160411090000','20160411124300','03:43:00',0,null,null,30,30,null,null,null,null,null,30,null);
+insert into trainnotable values                       
+('D3695','南宁东','广州南','动车',5,'20160412090000','20160412124300','03:43:00',0,null,null,30,30,null,null,null,null,null,30,null);
+insert into trainnotable values                       
+('D3695','南宁东','广州南','动车',5,'20160413090000','20160413124300','03:43:00',0,null,null,30,30,null,null,null,null,null,30,null);
+insert into trainnotable values                                                   
+('D3695','南宁东','广州南','动车',5,'20160414090000','20160414124300','03:43:00',0,null,null,30,30,null,null,null,null,null,30,null);
+insert into trainnotable values                       
+('D3695','南宁东','广州南','动车',5,'20160415090000','20160415124300','03:43:00',0,null,null,30,30,null,null,null,null,null,30,null);
+insert into trainnotable values                                                    
+('D3695','南宁东','广州南','动车',5,'20160416090000','20160416124300','03:43:00',0,null,null,30,30,null,null,null,null,null,30,null);
+insert into trainnotable values                                                    
+('D3695','南宁东','广州南','动车',5,'20160417090000','20160417124300','03:43:00',0,null,null,30,30,null,null,null,null,null,30,null);
+insert into trainnotable values                                                    
+('D3695','南宁东','广州南','动车',5,'20160418090000','20160418124300','03:43:00',0,null,null,30,30,null,null,null,null,null,30,null);
+insert into trainnotable values                       
+('D3695','南宁东','广州南','动车',5,'20160419090000','20160419124300','03:43:00',0,null,null,30,30,null,null,null,null,null,30,null);
+insert into trainnotable values                                                    
+('D3695','南宁东','广州南','动车',5,'20160420090000','20160420124300','03:43:00',0,null,null,30,30,null,null,null,null,null,30,null);
+insert into trainnotable values                                                    
+('D3695','南宁东','广州南','动车',5,'20160421090000','20160421124300','03:43:00',0,null,null,30,30,null,null,null,null,null,30,null);
+insert into trainnotable values                                                    
+('D3695','南宁东','广州南','动车',5,'20160422090000','20160422124300','03:43:00',0,null,null,30,30,null,null,null,null,null,30,null);
+insert into trainnotable values                       
+('D3695','南宁东','广州南','动车',5,'20160423090000','20160423124300','03:43:00',0,null,null,30,30,null,null,null,null,null,30,null);
+insert into trainnotable values                       
+('D3695','南宁东','广州南','动车',5,'20160424090000','20160424124300','03:43:00',0,null,null,30,30,null,null,null,null,null,30,null);
+
+
+insert into stationtable values
+('D3695','南宁东',1,'动车',null,0,'090000',0);
+insert into stationtable values
+('D3695','贵港',2,'动车','095000',0,'095200',0);
+insert into stationtable values
+('D3695','梧州南',3,'动车','105500',0,'110300',0);
+insert into stationtable values
+('D3695','肇庆东',4,'动车','120500',0,'120700',0);
+insert into stationtable values
+('D3695','广州南',5,'动车','124300',0,'124300',0);
+
+
+insert into costtable values
+('D3695','南宁东','贵港',null,null,49.5,41.0,null,null,null,null,null,41.0,null);
+insert into costtable values
+('D3695','南宁东','梧州南',null,null,111.5,93.0,null,null,null,null,null,93.0,null);
+insert into costtable values
+('D3695','南宁东','肇庆东',null,null,174.5,145.5,null,null,null,null,null,145.5,null);
+insert into costtable values
+('D3695','南宁东','广州南',null,null,202.5,169.0,null,null,null,null,null,169.0,null);
+insert into costtable values
+('D3695','贵港','梧州南',null,null,202.5,169.0,null,null,null,null,null,169.0,null);
+insert into costtable values
+('D3695','贵港','肇庆东',null,null,125.0,104.5,null,null,null,null,null,104.5,null);
+insert into costtable values
+('D3695','贵港','广州南',null,null,153.0,128.0,null,null,null,null,null,128.0,null);
+insert into costtable values
+('D3695','梧州南','肇庆东',null,null,63.0,52.5,null,null,null,null,null,52.5,null);
+insert into costtable values
+('D3695','梧州南','广州南',null,null,91.0,76.0,null,null,null,null,null,76.0,null);
+insert into costtable values
+('D3695','肇庆东','广州南',null,null,28.0,23.5,null,null,null,null,null,23.5,null);
+
+insert into seattable values
+('1','D3695','一等座','01','01');
+insert into seattable values
+('2','D3695','一等座','01','02');
+insert into seattable values
+('3','D3695','一等座','01','03');
+insert into seattable values
+('4','D3695','一等座','01','04');
+insert into seattable values
+('5','D3695','一等座','01','05');
+insert into seattable values
+('6','D3695','一等座','01','06');
+insert into seattable values
+('7','D3695','一等座','01','07');
+insert into seattable values
+('8','D3695','一等座','01','08');
+insert into seattable values
+('9','D3695','一等座','01','09');
+insert into seattable values
+('10','D3695','一等座','01','10');
+
+insert into seattable values
+('11','D3695','一等座','01','11');
+insert into seattable values
+('12','D3695','一等座','01','12');
+insert into seattable values
+('13','D3695','一等座','01','13');
+insert into seattable values
+('14','D3695','一等座','01','14');
+insert into seattable values
+('15','D3695','一等座','01','15');
+insert into seattable values
+('16','D3695','一等座','01','16');
+insert into seattable values
+('17','D3695','一等座','01','17');
+insert into seattable values
+('18','D3695','一等座','01','18');
+insert into seattable values
+('19','D3695','一等座','01','19');
+insert into seattable values
+('20','D3695','一等座','01','20');
+
+insert into seattable values
+('21','D3695','一等座','01','21');
+insert into seattable values
+('22','D3695','一等座','01','22');
+insert into seattable values
+('23','D3695','一等座','01','23');
+insert into seattable values
+('24','D3695','一等座','01','24');
+insert into seattable values
+('25','D3695','一等座','01','25');
+insert into seattable values
+('26','D3695','一等座','01','26');
+insert into seattable values
+('27','D3695','一等座','01','27');
+insert into seattable values
+('28','D3695','一等座','01','28');
+insert into seattable values
+('29','D3695','一等座','01','29');
+insert into seattable values
+('30','D3695','一等座','01','30');
+
+
+insert into seattable values
+('31','D3695','二等座','02','01');
+insert into seattable values
+('32','D3695','二等座','02','02');
+insert into seattable values
+('33','D3695','二等座','02','03');
+insert into seattable values
+('34','D3695','二等座','02','04');
+insert into seattable values
+('35','D3695','二等座','02','05');
+insert into seattable values
+('36','D3695','二等座','02','06');
+insert into seattable values
+('37','D3695','二等座','02','07');
+insert into seattable values
+('38','D3695','二等座','02','08');
+insert into seattable values
+('39','D3695','二等座','02','09');
+insert into seattable values
+('40','D3695','二等座','02','10');
+
+insert into seattable values
+('41','D3695','二等座','02','11');
+insert into seattable values
+('42','D3695','二等座','02','12');
+insert into seattable values
+('43','D3695','二等座','02','13');
+insert into seattable values
+('44','D3695','二等座','02','14');
+insert into seattable values
+('45','D3695','二等座','02','15');
+insert into seattable values
+('46','D3695','二等座','02','16');
+insert into seattable values
+('47','D3695','二等座','02','17');
+insert into seattable values
+('48','D3695','二等座','02','18');
+insert into seattable values
+('49','D3695','二等座','02','19');
+insert into seattable values
+('50','D3695','二等座','02','20');
+
+insert into seattable values
+('51','D3695','二等座','02','21');
+insert into seattable values
+('52','D3695','二等座','02','22');
+insert into seattable values
+('53','D3695','二等座','02','23');
+insert into seattable values
+('54','D3695','二等座','02','24');
+insert into seattable values
+('55','D3695','二等座','02','25');
+insert into seattable values
+('56','D3695','二等座','02','26');
+insert into seattable values
+('57','D3695','二等座','02','27');
+insert into seattable values
+('58','D3695','二等座','02','28');
+insert into seattable values
+('59','D3695','二等座','02','29');
+insert into seattable values
+('60','D3695','二等座','02','30');
+
+insert into seattable values
+('61','D3695','无座','03','01');
+insert into seattable values
+('62','D3695','无座','03','02');
+insert into seattable values
+('63','D3695','无座','03','03');
+insert into seattable values
+('64','D3695','无座','03','04');
+insert into seattable values
+('65','D3695','无座','03','05');
+insert into seattable values
+('66','D3695','无座','03','06');
+insert into seattable values
+('67','D3695','无座','03','07');
+insert into seattable values
+('68','D3695','无座','03','08');
+insert into seattable values
+('69','D3695','无座','03','09');
+insert into seattable values
+('70','D3695','无座','03','10');
+
+insert into seattable values
+('71','D3695','无座','03','11');
+insert into seattable values
+('72','D3695','无座','03','12');
+insert into seattable values
+('73','D3695','无座','03','13');
+insert into seattable values
+('74','D3695','无座','03','14');
+insert into seattable values
+('75','D3695','无座','03','15');
+insert into seattable values
+('76','D3695','无座','03','16');
+insert into seattable values
+('77','D3695','无座','03','17');
+insert into seattable values
+('78','D3695','无座','03','18');
+insert into seattable values
+('79','D3695','无座','03','19');
+insert into seattable values
+('80','D3695','无座','03','20');
+
+insert into seattable values
+('81','D3695','无座','03','21');
+insert into seattable values
+('82','D3695','无座','03','22');
+insert into seattable values
+('83','D3695','无座','03','23');
+insert into seattable values
+('84','D3695','无座','03','24');
+insert into seattable values
+('85','D3695','无座','03','25');
+insert into seattable values
+('86','D3695','无座','03','26');
+insert into seattable values
+('87','D3695','无座','03','27');
+insert into seattable values
+('88','D3695','无座','03','28');
+insert into seattable values
+('89','D3695','无座','03','29');
+insert into seattable values
+('90','D3695','无座','03','30');

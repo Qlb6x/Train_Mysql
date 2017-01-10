@@ -1,0 +1,5 @@
+drop event if exists autonightupdate;
+create event autonightupdate on schedule 
+EVERY 30 SECOND
+on completion preserve
+do call updatetime();

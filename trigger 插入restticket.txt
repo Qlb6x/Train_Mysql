@@ -1,0 +1,23 @@
+DELIMITER //
+drop trigger if exists autorestticket;
+create trigger autorestticket
+after insert on costtable
+for each row
+	begin
+		declare S varchar(30);
+		declare E varchar(30);
+		SET s=new.station_start;
+		set E=new.station_end;
+		delete from restticket where station_start='#';
+		insert into restticket (station_start,station_end)
+		values(left(S,2),left(E,2));
+		insert into restticket (station_start,station_end)
+		values('#','#');
+		
+	end;
+//
+DELIMITER ;
+
+
+
+

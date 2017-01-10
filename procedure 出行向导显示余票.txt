@@ -1,0 +1,140 @@
+DELIMITER //
+drop procedure if exists countrest;
+create procedure countrest()
+	begin
+		declare S varchar(20) default '';
+		declare E varchar(20) default '';
+		declare num int;
+		declare restnum int;
+		declare day0 varchar(20);
+		declare day1 varchar(20);
+		declare day2 varchar(20);
+		declare day3 varchar(20);
+		declare usedday int;
+		declare trainno varchar(20);
+		DECLARE Done INT DEFAULT 0;
+		declare stationtime2day int;
+		declare zong int;
+		DECLARE cur CURSOR FOR SELECT station_start,station_end FROM restticket;
+		DECLARE cur2 CURSOR FOR SELECT train_no,station_time2_day FROM ttt;
+		DECLARE CONTINUE HANDLER FOR SQLSTATE '02000' SET Done = 1;
+	
+	
+		select date_format(date_add(date(now()),interval 0 day),'%Y%m%d') into day0;
+		select date_format(date_add(date(now()),interval 1 day),'%Y%m%d') into day1;	
+		select date_format(date_add(date(now()),interval 2 day),'%Y%m%d') into day2;
+		select date_format(date_add(date(now()),interval 3 day),'%Y%m%d') into day3;
+		
+		open cur;
+		fetch cur into S,E;
+		while(S <>'#')do
+				drop table if exists ttt;
+				
+				Create TEMPORARY table ttt (Select train_no,station_time2_day from stationtable where left(station_start,2)=S);
+				insert into ttt value('#',0);
+				
+				set restnum=0;
+				set num=0;
+			
+				open cur2;
+				fetch cur2 into trainno,stationtime2day;
+				while(trainno<>'#')do
+					select count(*) into num from 
+					tickettable a 
+					where left(a.station_start,2)=S and left(a.station_end,2)=E
+					and a.ticket_flag1=0 and a.ticket_flag2=1
+					and a.train_no=trainno
+					and date_format(date_add(date_format(substring(a.ticket_no,length(a.train_no)+1,8),'%Y-%m-%d'),interval stationtime2day day),'%Y%m%d')=day0;
+					set restnum=restnum+num;
+					fetch cur2 into trainno,stationtime2day;
+					
+				end while;
+				close cur2;
+				update restticket set rest0=restnum
+				where station_end=E and station_start=S;
+				
+				drop table if exists ttt;
+				
+				Create TEMPORARY table ttt (Select train_no,station_time2_day from stationtable where left(station_start,2)=S);
+				insert into ttt value('#',0);
+				
+				set restnum=0;
+				set num=0;
+			
+				open cur2;
+				fetch cur2 into trainno,stationtime2day;
+				while(trainno<>'#')do
+					select count(*) into num from 
+					tickettable a 
+					where left(a.station_start,2)=S and left(a.station_end,2)=E
+					and a.ticket_flag1=0 and a.ticket_flag2=1
+					and a.train_no=trainno
+					and date_format(date_add(date_format(substring(a.ticket_no,length(a.train_no)+1,8),'%Y-%m-%d'),interval stationtime2day day),'%Y%m%d')=day1;
+					set restnum=restnum+num;
+					fetch cur2 into trainno,stationtime2day;
+					
+				end while;
+				close cur2;
+				update restticket set rest1=restnum
+				where station_end=E and station_start=S;
+				
+				drop table if exists ttt;
+				
+				Create TEMPORARY table ttt (Select train_no,station_time2_day from stationtable where left(station_start,2)=S);
+				insert into ttt value('#',0);
+				
+				set restnum=0;
+				set num=0;
+			
+				open cur2;
+				fetch cur2 into trainno,stationtime2day;
+				while(trainno<>'#')do
+					select count(*) into num from 
+					tickettable a 
+					where left(a.station_start,2)=S and left(a.station_end,2)=E
+					and a.ticket_flag1=0 and a.ticket_flag2=1
+					and a.train_no=trainno
+					and date_format(date_add(date_format(substring(a.ticket_no,length(a.train_no)+1,8),'%Y-%m-%d'),interval stationtime2day day),'%Y%m%d')=day2;
+					set restnum=restnum+num;
+					fetch cur2 into trainno,stationtime2day;
+					
+				end while;
+				close cur2;
+				update restticket set rest2=restnum
+				where station_end=E and station_start=S;
+				
+				drop table if exists ttt;
+				
+				Create TEMPORARY table ttt (Select train_no,station_time2_day from stationtable where left(station_start,2)=S);
+				insert into ttt value('#',0);
+				
+				set restnum=0;
+				set num=0;
+			
+				open cur2;
+				fetch cur2 into trainno,stationtime2day;
+				while(trainno<>'#')do
+					select count(*) into num from 
+					tickettable a 
+					where left(a.station_start,2)=S and left(a.station_end,2)=E
+					and a.ticket_flag1=0 and a.ticket_flag2=1
+					and a.train_no=trainno
+					and date_format(date_add(date_format(substring(a.ticket_no,length(a.train_no)+1,8),'%Y-%m-%d'),interval stationtime2day day),'%Y%m%d')=day3;
+					set restnum=restnum+num;
+					fetch cur2 into trainno,stationtime2day;
+					
+				end while;
+				close cur2;
+				update restticket set rest3=restnum
+				where station_end=E and station_start=S;
+				
+				
+				fetch cur into S,E;
+     	end while;
+			
+
+		close cur;
+		
+	end;
+//
+DELIMITER ;

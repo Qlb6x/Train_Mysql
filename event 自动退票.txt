@@ -1,0 +1,5 @@
+drop event if exists autotask;
+create event autotask on schedule EVERY 1 SECOND
+on completion preserve do 
+update userorder set order_flag=4 where order_flag=0 and timestampdiff(second, order_time,now())>=1800;
+

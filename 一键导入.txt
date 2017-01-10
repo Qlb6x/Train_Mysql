@@ -1,0 +1,2127 @@
+drop database hcp;
+create database hcp;
+use hcp;
+create table admin(
+	admin_sex varchar(2) not null,
+	admin_phone varchar(12) not null,
+	admin_id varchar(5) not null,
+	admin_surname varchar(10) not null,
+	admin_username varchar(20) primary key not null,
+	admin_password varchar(20) not null
+);
+insert into admin values
+('男','18721212580','1','刘顺裕','lsy','666666');
+insert into admin values
+('男','13916174568','2','马振伟','mzw','123456');
+create table user(
+	user_surname varchar(10) not null,
+	user_id varchar(18) not null,
+	user_phone varchar(20) not null,
+	user_username varchar(20) primary key not null,
+	user_password varchar(20) not null,
+	user_money float(7,1) unsigned null default 0
+);
+insert into user values
+('李应','310113164756568456','18721212584','1','111111',50000.5);
+insert into user values
+('高守信','312224454521253524','18721212547','2','222222',50000.5);
+
+create table trainnotable(
+	train_no varchar(10)  not null,
+	train_start varchar(20) not null,
+	train_end varchar(20) not null,
+	train_type varchar(20) not null,
+	train_num int not null,
+	train_time1 datetime not null,
+	train_time2 datetime not null,
+	train_used_time time not null,
+	train_used_day int not null,
+	train_num1 int null default null,
+	train_num2 int null default null,
+	train_num3 int null default null,
+	train_num4 int null default null,
+	train_num5 int null default null,
+	train_num6 int null default null,
+	train_num7 int null default null,
+	train_num8 int null default null,
+	train_num9 int null default null,
+	train_num10 int null default null,
+	train_num11 int null default null,
+	primary key(train_no,train_time1)
+);
+
+create table stationtable(
+	train_no varchar(10) not null,
+	station_start varchar(20) not null,
+	station_order int not null,
+	train_type varchar(20) not null,
+	station_time1 time null,
+	station_time1_day int,
+	station_time2 time not null,
+	station_time2_day int not null,
+	primary key(train_no,station_order)
+);
+
+create table costtable(
+	train_no varchar(10) not null,
+	station_start varchar(20) not null,
+	station_end varchar(20) not null,
+	cost_num1 float(7,1) null default null,
+	cost_num2 float(7,1) null default null,
+	cost_num3 float(7,1) null default null,
+	cost_num4 float(7,1) null default null,
+	cost_num5 float(7,1) null default null,
+	cost_num6 float(7,1) null default null,
+	cost_num7 float(7,1) null default null,
+	cost_num8 float(7,1) null default null,
+	cost_num9 float(7,1) null default null,
+	cost_num10 float(7,1) null default null,
+	cost_num11 float(7,1) null default null,
+	primary key(train_no,station_start,station_end)
+);
+
+create table seattable(
+	seat_id varchar(10) not null,
+	train_no varchar(10) not null,
+	seat_type varchar(10) not null,
+	seat_location1 varchar(10) not null,
+	seat_location2 varchar(10) not null,
+	primary key(seat_id,train_no)
+);
+
+create table tickettable(
+	ticket_no varchar(30) not null primary key,
+	train_no varchar(10) not null,
+	station_start varchar(20) not null,
+	station_end varchar(20) not null,
+	seat_id varchar(20) not null,
+	ticket_money float(7,1) not null,
+	ticket_flag1 int not null default 0,
+	ticket_flag2 int not null default 1
+);
+
+create table userorder(
+	order_no varchar(30) primary key not null,
+	ticket_no varchar(30) not null,
+	order_time datetime not null,
+	order_flag int not null,
+	user_username varchar(20) not null
+);	
+
+create table cardtable(
+	card_id varchar(20) not null primary key,
+	card_pass varchar(20) not null,
+	card_flag int not null default 0,
+	card_money int not null
+);
+
+create table noticetable(
+notice_name varchar(100) not null primary key,
+notice_time datetime not null,
+notice_article longtext not null
+);
+
+create table restticket(
+	station_start varchar(10) not null,
+	station_end varchar(10) not null,
+	rest0 int,
+	rest1 int,
+	rest2 int,
+	rest3 int
+	
+);
+
+create table timespread(
+	time7 int,
+	time8 int,
+	time9 int,
+	time10 int,
+	time11 int,
+	time12 int,
+	time13 int,
+	time14 int,
+	time15 int,
+	time16 int,
+	time17 int,
+	time18 int,
+	time19 int,
+	time20 int,
+	time21 int,
+	time22 int
+);
+create table hotsearchstation(
+station_name varchar(10) not null primary key,
+count int
+);
+
+
+drop event if exists everyday_testevent2;
+create event everyday_testevent2 on schedule 
+EVERY 1 day starts '2016-03-20 09:00:00'
+do call everyday_test1;
+
+drop event if exists everyday_testevent1;
+create event everyday_testevent1 on schedule 
+EVERY 1 day starts '2016-03-20 08:00:00'
+do call everyday_test1;
+
+DELIMITER //
+drop procedure if exists everyday_test1;
+create procedure everyday_test1()
+	begin
+		declare da varchar(30);
+		select date_format(date(now()),'%Y%m%d') into da;
+		call orderticket('G102','南京南','滁州',da,'一等座','1');
+
+	end;
+//
+DELIMITER ;
+
+
+drop event if exists everyday_testevent3;
+create event everyday_testevent3 on schedule 
+EVERY 2 day starts '2016-03-20 10:00:00'
+do call everyday_test1;
+
+drop event if exists autocountrest;
+create event autocountrest on schedule EVERY 1800 second
+on completion preserve do 
+call countrest();
+
+drop event if exists autonightupdate;
+create event autonightupdate on schedule 
+EVERY 30 SECOND
+on completion preserve
+do call updatetime();
+
+drop event if exists autodelticket;
+create event autodelticket on schedule 
+EVERY 1 day starts '2016-03-07 23:59:00'
+do call everynightdel();
+
+DELIMITER //
+drop trigger if exists autotrigger;
+create trigger autotrigger
+after update on userorder
+for each row
+	begin
+		if (new.order_flag=4) then
+			call cancelorder2(new.ticket_no,new.order_no);
+		END IF;
+	end;
+//
+DELIMITER ;
+
+DELIMITER //
+drop trigger if exists autorestticket;
+create trigger autorestticket
+after insert on costtable
+for each row
+	begin
+		declare S varchar(30);
+		declare E varchar(30);
+		SET s=new.station_start;
+		set E=new.station_end;
+		delete from restticket where station_start='#';
+		insert into restticket (station_start,station_end)
+		values(left(S,2),left(E,2));
+		insert into restticket (station_start,station_end)
+		values('#','#');
+	end;
+//
+DELIMITER ;
+
+
+DELIMITER //
+drop procedure if exists cancelorder2;
+create procedure cancelorder2(ticketno varchar(30),orderno varchar(30))
+	begin
+		declare S varchar(20);	
+		declare E varchar(20);
+		declare seatid varchar(20);
+		declare numS int default 0;
+		declare numE int default 0;
+		declare trainnum int default 0;
+		declare trainno varchar(20);
+		declare flag int;
+		declare shorttrainno varchar(30);
+		declare i int default 1;
+		declare j int;
+		declare k int default 0;
+		declare userorder_num int;/*找到userorder表中 某用户 订单的最大值*/
+
+		
+		
+		select station_start,station_end,seat_id,train_no
+		into S,E,seatid,trainno
+		from tickettable where ticket_no=ticketno;
+		
+		/*找最大站序*/
+		select train_num into trainnum from trainnotable where train_no=trainno and date(train_time1)=substring(ticketno,length(trainno)+1,8);
+		
+		
+		select station_order into numS from stationtable where train_no=trainno and station_start=S;
+		select station_order into numE from stationtable where train_no=trainno and station_start=E;
+		
+		
+		select left(ticketno,length(trainno)+8+5) into shorttrainno;
+
+		/*select numS,numE,trainno,seatid;*/
+	
+			while i<=numS do
+				set j=numS+1;
+				while j<=trainnum do
+					update tickettable set ticket_flag2=1 where left(ticket_no,length(train_no)+5+8)=shorttrainno 
+					and right(ticket_no,4)=concat(LPAD(i,2,0),LPAD(j,2,0))
+					and ticket_flag1=0 and ticket_flag2=0; 
+					
+					set j=j+1;
+				end while;
+				set i=i+1;
+			end while;	
+			
+			set i=numS+1;
+			while i<=numE-1 do
+				set j=i+1;
+				while j<=trainnum do
+					update tickettable set ticket_flag2=1 where left(ticket_no,length(train_no)+5+8)=shorttrainno 
+					and right(ticket_no,4)=concat(LPAD(i,2,0),LPAD(j,2,0))
+					and ticket_flag1=0 and ticket_flag2=0; 
+					
+					set j=j+1;
+				end while;
+				set i=i+1;
+			end while;
+	end;
+//
+DELIMITER ;
+
+DELIMITER //
+drop procedure if exists updatetime;
+create procedure updatetime()
+	begin
+		declare t7 int;
+		declare t8 int;
+		declare t9 int;
+		declare t10 int;
+		declare t11 int;
+		declare t12 int;
+		declare t13 int;
+		declare t14 int;
+		declare t15 int;
+		declare t16 int;
+		declare t17 int;
+		declare t18 int;
+		declare t19 int;
+		declare t20 int;
+		declare t21 int;
+		declare t22 int;
+		delete from timespread;
+		select count(*) into t7 from userorder where date_format(time(order_time),'%H')=7 and date(now())=date(order_time);
+		select count(*) into t8 from userorder where date_format(time(order_time),'%H')=8 and date(now())=date(order_time);
+		select count(*) into t9 from userorder where date_format(time(order_time),'%H')=9 and date(now())=date(order_time);
+		select count(*) into t10 from userorder where date_format(time(order_time),'%H')=10 and date(now())=date(order_time);
+		select count(*) into t11 from userorder where date_format(time(order_time),'%H')=11 and date(now())=date(order_time);
+		select count(*) into t12 from userorder where date_format(time(order_time),'%H')=12 and date(now())=date(order_time);
+		select count(*) into t13 from userorder where date_format(time(order_time),'%H')=13 and date(now())=date(order_time);
+		select count(*) into t14 from userorder where date_format(time(order_time),'%H')=14 and date(now())=date(order_time);
+		select count(*) into t15 from userorder where date_format(time(order_time),'%H')=15 and date(now())=date(order_time);
+		select count(*) into t16 from userorder where date_format(time(order_time),'%H')=16 and date(now())=date(order_time);
+		select count(*) into t17 from userorder where date_format(time(order_time),'%H')=17 and date(now())=date(order_time);
+		select count(*) into t18 from userorder where date_format(time(order_time),'%H')=18 and date(now())=date(order_time);
+		select count(*) into t19 from userorder where date_format(time(order_time),'%H')=19 and date(now())=date(order_time);
+		select count(*) into t20 from userorder where date_format(time(order_time),'%H')=20 and date(now())=date(order_time);
+		select count(*) into t21 from userorder where date_format(time(order_time),'%H')=21 and date(now())=date(order_time);
+		select count(*) into t22 from userorder where date_format(time(order_time),'%H')=22 and date(now())=date(order_time);
+		insert into timespread values(t7,t8,t9,t10,t11,t12,t13,t14,t15,t16,t17,t18,t19,t20,t21,t22);
+		
+		select count(*) into t7 from userorder where date_format(time(order_time),'%H')=7 and date_add(date(now()),interval -1 day)=date(order_time);
+		select count(*) into t8 from userorder where date_format(time(order_time),'%H')=8 and date_add(date(now()),interval -1 day)=date(order_time);
+		select count(*) into t9 from userorder where date_format(time(order_time),'%H')=9 and date_add(date(now()),interval -1 day)=date(order_time);
+		select count(*) into t10 from userorder where date_format(time(order_time),'%H')=10 and date_add(date(now()),interval -1 day)=date(order_time);
+		select count(*) into t11 from userorder where date_format(time(order_time),'%H')=11 and date_add(date(now()),interval -1 day)=date(order_time);
+		select count(*) into t12 from userorder where date_format(time(order_time),'%H')=12 and date_add(date(now()),interval -1 day)=date(order_time);
+		select count(*) into t13 from userorder where date_format(time(order_time),'%H')=13 and date_add(date(now()),interval -1 day)=date(order_time);
+		select count(*) into t14 from userorder where date_format(time(order_time),'%H')=14 and date_add(date(now()),interval -1 day)=date(order_time);
+		select count(*) into t15 from userorder where date_format(time(order_time),'%H')=15 and date_add(date(now()),interval -1 day)=date(order_time);
+		select count(*) into t16 from userorder where date_format(time(order_time),'%H')=16 and date_add(date(now()),interval -1 day)=date(order_time);
+		select count(*) into t17 from userorder where date_format(time(order_time),'%H')=17 and date_add(date(now()),interval -1 day)=date(order_time);
+		select count(*) into t18 from userorder where date_format(time(order_time),'%H')=18 and date_add(date(now()),interval -1 day)=date(order_time);
+		select count(*) into t19 from userorder where date_format(time(order_time),'%H')=19 and date_add(date(now()),interval -1 day)=date(order_time);
+		select count(*) into t20 from userorder where date_format(time(order_time),'%H')=20 and date_add(date(now()),interval -1 day)=date(order_time);
+		select count(*) into t21 from userorder where date_format(time(order_time),'%H')=21 and date_add(date(now()),interval -1 day)=date(order_time);
+		select count(*) into t22 from userorder where date_format(time(order_time),'%H')=22 and date_add(date(now()),interval -1 day)=date(order_time);
+		insert into timespread values(t7,t8,t9,t10,t11,t12,t13,t14,t15,t16,t17,t18,t19,t20,t21,t22);
+		
+		select count(*) into t7 from userorder where date_format(time(order_time),'%H')=7 and date_add(date(now()),interval -2 day)=date(order_time);
+		select count(*) into t8 from userorder where date_format(time(order_time),'%H')=8 and date_add(date(now()),interval -2 day)=date(order_time);
+		select count(*) into t9 from userorder where date_format(time(order_time),'%H')=9 and date_add(date(now()),interval -2 day)=date(order_time);
+		select count(*) into t10 from userorder where date_format(time(order_time),'%H')=10 and date_add(date(now()),interval -2 day)=date(order_time);
+		select count(*) into t11 from userorder where date_format(time(order_time),'%H')=11 and date_add(date(now()),interval -2 day)=date(order_time);
+		select count(*) into t12 from userorder where date_format(time(order_time),'%H')=12 and date_add(date(now()),interval -2 day)=date(order_time);
+		select count(*) into t13 from userorder where date_format(time(order_time),'%H')=13 and date_add(date(now()),interval -2 day)=date(order_time);
+		select count(*) into t14 from userorder where date_format(time(order_time),'%H')=14 and date_add(date(now()),interval -2 day)=date(order_time);
+		select count(*) into t15 from userorder where date_format(time(order_time),'%H')=15 and date_add(date(now()),interval -2 day)=date(order_time);
+		select count(*) into t16 from userorder where date_format(time(order_time),'%H')=16 and date_add(date(now()),interval -2 day)=date(order_time);
+		select count(*) into t17 from userorder where date_format(time(order_time),'%H')=17 and date_add(date(now()),interval -2 day)=date(order_time);
+		select count(*) into t18 from userorder where date_format(time(order_time),'%H')=18 and date_add(date(now()),interval -2 day)=date(order_time);
+		select count(*) into t19 from userorder where date_format(time(order_time),'%H')=19 and date_add(date(now()),interval -2 day)=date(order_time);
+		select count(*) into t20 from userorder where date_format(time(order_time),'%H')=20 and date_add(date(now()),interval -2 day)=date(order_time);
+		select count(*) into t21 from userorder where date_format(time(order_time),'%H')=21 and date_add(date(now()),interval -2 day)=date(order_time);
+		select count(*) into t22 from userorder where date_format(time(order_time),'%H')=22 and date_add(date(now()),interval -2 day)=date(order_time);
+		insert into timespread values(t7,t8,t9,t10,t11,t12,t13,t14,t15,t16,t17,t18,t19,t20,t21,t22);
+	end;
+//
+DELIMITER ;
+
+
+DELIMITER //
+drop procedure if exists buyticket;
+create procedure buyticket(orderno varchar(30))
+	begin
+		declare username varchar(30);
+		declare ticketno varchar(30);
+		declare cost float(7,1);
+		select user_username,ticket_no into username,ticketno from userorder where order_no=orderno;
+		select ticket_money into cost from tickettable where ticket_no=ticketno;
+		/* select username,ticketno,cost; */
+	
+		start transaction;
+		update user set user_money=user_money-cost where user_username=username;
+		update userorder set order_flag=1 where order_no=orderno and order_flag=0;
+		update tickettable set ticket_flag1=1 where ticket_no=ticketno;
+		
+		commit;
+		select order_flag from userorder where order_no=orderno;
+	end;
+//
+DELIMITER ;
+
+DELIMITER //
+drop procedure if exists cancelorder;
+create procedure cancelorder(ticketno varchar(30),orderno varchar(30))
+	begin
+		declare S varchar(20);	
+		declare E varchar(20);
+		declare seatid varchar(20);
+		declare numS int default 0;
+		declare numE int default 0;
+		declare trainnum int default 0;
+		declare trainno varchar(20);
+		declare flag int;
+		declare shorttrainno varchar(30);
+		declare i int default 1;
+		declare j int;
+		declare k int default 0;
+		declare userorder_num int;/*找到userorder表中 某用户 订单的最大值*/
+		declare t_error int default 0;
+		declare continue handler for sqlexception SET t_error=1;  
+		
+		
+		
+		select station_start,station_end,seat_id,train_no
+		into S,E,seatid,trainno
+		from tickettable where ticket_no=ticketno;
+		
+		/*找最大站序*/
+		select train_num into trainnum from trainnotable where train_no=trainno and date(train_time1)=substring(ticketno,length(trainno)+1,8);
+		
+		
+		select station_order into numS from stationtable where train_no=trainno and station_start=S;
+		select station_order into numE from stationtable where train_no=trainno and station_start=E;
+		
+		
+		select left(ticketno,length(trainno)+8+5) into shorttrainno;
+
+		/*select numS,numE,trainno,seatid;*/
+		START TRANSACTION;
+			while i<=numS do
+				set j=numS+1;
+				while j<=trainnum do
+					update tickettable set ticket_flag2=1 where left(ticket_no,length(train_no)+5+8)=shorttrainno 
+					and right(ticket_no,4)=concat(LPAD(i,2,0),LPAD(j,2,0))
+					and ticket_flag1=0 and ticket_flag2=0; 
+						IF t_error = 1 THEN  
+							ROLLBACK;  
+						ELSE  
+							COMMIT;  
+						END IF;  
+					set j=j+1;
+				end while;
+				set i=i+1;
+			end while;	
+			
+			set i=numS+1;
+			while i<=numE-1 do
+				set j=i+1;
+				while j<=trainnum do
+					update tickettable set ticket_flag2=1 where left(ticket_no,length(train_no)+5+8)=shorttrainno 
+					and right(ticket_no,4)=concat(LPAD(i,2,0),LPAD(j,2,0))
+					and ticket_flag1=0 and ticket_flag2=0; 
+						IF t_error = 1 THEN  
+							ROLLBACK;  
+						ELSE  
+							COMMIT;  
+						END IF;  
+					set j=j+1;
+				end while;
+				set i=i+1;
+			end while;
+		select order_flag into flag from userorder where order_no=orderno;
+
+		IF flag=0 then
+			update userorder set order_flag=2 where order_no=orderno;
+			IF t_error = 1 THEN  
+				ROLLBACK;  
+			ELSE  
+				COMMIT;  
+			END IF; 
+		END IF;
+	end;
+//
+DELIMITER ;
+
+
+DELIMITER //
+drop procedure if exists everynightadd;
+create procedure everynightadd()
+	begin
+	
+		DECLARE trainno varchar(30);
+		DECLARE Done INT DEFAULT 0;
+		
+		declare time1 time;
+		declare time2 time;
+		declare date1 date;
+		declare date2 date;
+		declare finaldate1 date;
+		declare finaldate2 date;
+		declare trainstart varchar(20);
+		declare trainend varchar(20);
+		declare traintype varchar(20);
+		declare trainnum int;
+		declare trainusedtime time;
+		declare trainusedday int;
+		declare num1 int;
+		declare num2 int;
+		declare num3 int;
+		declare num4 int;
+		declare num5 int;
+		declare num6 int;
+		declare num7 int;
+		declare num8 int;
+		declare num9 int;
+		declare num10 int;
+		declare num11 int;
+		
+		DECLARE cur CURSOR FOR SELECT train_no FROM trainnotable group by train_no;
+		DECLARE CONTINUE HANDLER FOR SQLSTATE '02000' SET Done = 1;
+		
+		open cur;
+		fetch cur into trainno;
+		while Done<>1 do
+		
+			
+			select trainno;
+			select max(date(train_time2)) into date2 from trainnotable where train_no=trainno;
+			
+			select date_add(date2,interval 1 day) into finaldate2;
+			
+			select time(train_time1),time(train_time2),date(train_time1),
+			train_start ,train_end,train_type,
+			train_num ,train_used_time ,train_used_day ,
+			train_num1 ,train_num2 ,train_num3 ,train_num4 ,train_num5 ,train_num6 ,
+			train_num7 ,train_num8 ,train_num9 ,train_num10,train_num11 
+			into
+			time1,time2,date1,trainstart,trainend,traintype,trainnum,trainusedtime,trainusedday,
+			num1,num2,num3,num4,num5,num6,num7,num8,num9,num10,num11
+			from trainnotable where train_no=trainno and date(train_time2)=date2;
+
+			select date_add(date1,interval 1 day) into finaldate1;
+			select finaldate1,finaldate2;
+			insert into trainnotable values(trainno,trainstart,trainend,traintype,trainnum,
+			concat(finaldate1,' ',time1),concat(finaldate2,' ',time2),
+			trainusedtime,trainusedday,num1,num2,num3,num4,num5,num6,num7,num8,num9,num10,num11
+			);
+			call insertticket(trainno,date_format(finaldate1,'%Y%m%d'));
+			fetch cur into trainno;
+			end while;
+		close cur;
+	end;
+//
+DELIMITER ;
+
+
+DELIMITER //
+drop procedure if exists everynightdel;
+create procedure everynightdel()
+	begin
+		delete from trainnotable
+		where date(train_time1)<date_sub(date(now()),interval 5 day);
+		delete from tickettable
+		where substring(ticket_no,length(train_no)+1,8)<date_format(date_sub(date(now()),interval 5 day),'%Y%m%d');
+		delete from userorder
+		where date(order_time)<date_sub(date(now()),interval 4 day);
+	end; 
+//
+DELIMITER ;
+
+
+DELIMITER //
+drop procedure if exists insertticket;
+create procedure insertticket(trainno varchar(10),TT varchar(10))
+	begin
+		declare ticketno varchar(30);/*车票号=车次号+发车日期+时隔天数(2位)+座位id 5位补全0 +站序S(2位)*+站序E(2位)*/
+		declare ticketno2 varchar(30);
+		declare dada varchar(20);/*捕捉车次总发车时间的前8位*/
+		declare trainnum int default 0;/*站序最大值，就是车站的个数*/
+		declare x int default 1;  /*外循环*/
+		declare y int default 1;/*内循环*/
+		declare z int default 1;
+		declare seatnum int;/*座位总数*/
+		declare S varchar(20);/*车票起点*/
+		declare E varchar(20);/*车票终点*/
+		declare seattype varchar(20);/*座位类型中文字符串*/
+		declare ticketcost float(7,1) default 0;/*票价*/
+		declare useday int default null;
+		/*求出座位总和*/
+		select (ifnull(train_num1,0)+ifnull(train_num2,0)+ifnull(train_num3,0)+ifnull(train_num4,0)+
+		ifnull(train_num5,0)+ifnull(train_num6,0)+ifnull(train_num7,0)+ifnull(train_num8,0)+
+		ifnull(train_num9,0)+ifnull(train_num10,0)+ifnull(train_num11,0))
+		into seatnum
+		from trainnotable where train_no=trainno and date_format(train_time1,'%Y%m%d')=TT;
+
+		/* select seatnum; */
+		
+		/*找到发车日期*/
+		select DATE_FORMAT(train_time1,'%Y%m%d'),train_num
+		into dada,trainnum
+		from trainnotable where train_no=trainno and date_format(train_time1,'%Y%m%d')=TT;
+		
+		/* select trainnum; */
+		/*经过的天数，加入车票号*/
+		select station_time2_day into useday from stationtable where train_no=trainno and station_order=trainnum;
+		
+		/*循环生成车票  */
+		while x<=seatnum do
+			set ticketno=concat(trainno,dada,LPAD(x,5,0),LPAD(useday,2,0));
+			while y<trainnum do
+				
+				set z=y+1;
+				while z<=trainnum do
+					set seattype=null;
+					set ticketcost=0;
+					select station_start into S from stationtable where train_no=trainno and station_order=y;
+					select station_start into E from stationtable where train_no=trainno and station_order=z;
+					select seat_type into seattype from seattable where seat_id=x and train_no=trainno;
+					
+	
+					if seattype='商务座' then 
+						select cost_num1 into ticketcost from costtable where train_no=trainno and station_start=S and station_end=E;
+					
+					elseif seattype='特等座' then 
+						select cost_num2 into ticketcost from costtable where train_no=trainno and station_start=S and station_end=E;
+					
+					elseif seattype='一等座' then 
+						select cost_num3 into ticketcost from costtable where train_no=trainno and station_start=S and station_end=E;
+					
+					elseif seattype='二等座' then 
+						select cost_num4 into ticketcost from costtable where train_no=trainno and station_start=S and station_end=E;
+					
+					elseif seattype='高级软卧' then  
+						select cost_num5 into ticketcost from costtable where train_no=trainno and station_start=S and station_end=E;
+					
+					elseif seattype='软卧' then 
+						select cost_num6 into ticketcost from costtable where train_no=trainno and station_start=S and station_end=E;
+				
+					elseif seattype='硬卧' then   
+						select cost_num7 into ticketcost from costtable where train_no=trainno and station_start=S and station_end=E;
+					
+					elseif seattype='软座' then 
+						select cost_num8 into ticketcost from costtable where train_no=trainno and station_start=S and station_end=E;
+					
+					elseif seattype='硬座' then  
+						select cost_num9 into ticketcost from costtable where train_no=trainno and station_start=S and station_end=E;
+				
+					elseif seattype='无座' then 
+						select cost_num10 into ticketcost from costtable where train_no=trainno and station_start=S and station_end=E;
+				
+					else  
+						select cost_num11 into ticketcost from costtable where train_no=trainno and station_start=S and station_end=E;
+					end if;
+
+					
+					set ticketno2=null;
+					set ticketno2=concat(ticketno,LPAD(y,2,0),LPAD(z,2,0));
+					
+					insert into tickettable values(ticketno2,trainno,S,E,x,ticketcost,0,1);
+					set z=z+1;
+					
+				end while;
+				
+				set y=y+1;
+			end while;
+			set x=x+1;
+			set y=1;
+			set z=1;
+		end while;
+
+	end;
+//
+DELIMITER ;
+
+
+DELIMITER //
+drop procedure if exists checkrest;
+create procedure checkrest(trainno varchar(30),S varchar(30),E varchar(30),TT varchar(30),seattype varchar(30),username varchar(20))
+	begin	
+	declare daynum int;
+	declare TTT varchar(30);
+	declare ticketcount int default 0;
+	declare shortticketno varchar(30);
+	declare flag varchar(30) default 'x';
+		select station_time1_day into daynum from stationtable 
+		where train_no=trainno and station_start=S;
+		select date_format(date_sub(TT,interval daynum day),'%Y%m%d') into TTT;
+		
+		set shortticketno=concat(trainno,TTT);
+
+		select count(*) into ticketcount from tickettable 
+		where left(ticket_no,length(shortticketno))=shortticketno
+		and seat_id in (select seat_id from seattable where seat_type=seattype)
+		and station_start=S and station_end=E
+		and ticket_flag1=0 and ticket_flag2=1;
+		
+		if (ticketcount=0) then
+			select flag;
+		ELSE
+			set flag='y';
+			select flag;
+		END IF;
+	end;
+//
+DELIMITER ;
+
+DELIMITER //
+drop procedure if exists countrest;
+create procedure countrest()
+	begin
+		declare S varchar(20) default '';
+		declare E varchar(20) default '';
+		declare num int;
+		declare restnum int;
+		declare day0 varchar(20);
+		declare day1 varchar(20);
+		declare day2 varchar(20);
+		declare day3 varchar(20);
+		declare usedday int;
+		declare trainno varchar(20);
+		DECLARE Done INT DEFAULT 0;
+		declare stationtime2day int;
+		declare zong int;
+		DECLARE cur CURSOR FOR SELECT station_start,station_end FROM restticket;
+		DECLARE cur2 CURSOR FOR SELECT train_no,station_time2_day FROM ttt;
+		DECLARE CONTINUE HANDLER FOR SQLSTATE '02000' SET Done = 1;
+	
+	
+		select date_format(date_add(date(now()),interval 0 day),'%Y%m%d') into day0;
+		select date_format(date_add(date(now()),interval 1 day),'%Y%m%d') into day1;	
+		select date_format(date_add(date(now()),interval 2 day),'%Y%m%d') into day2;
+		select date_format(date_add(date(now()),interval 3 day),'%Y%m%d') into day3;
+		
+		open cur;
+		fetch cur into S,E;
+		while(S <>'#')do
+				drop table if exists ttt;
+				
+				Create TEMPORARY table ttt (Select train_no,station_time2_day from stationtable where left(station_start,2)=S);
+				insert into ttt value('#',0);
+				
+				set restnum=0;
+				set num=0;
+			
+				open cur2;
+				fetch cur2 into trainno,stationtime2day;
+				while(trainno<>'#')do
+					select count(*) into num from 
+					tickettable a 
+					where left(a.station_start,2)=S and left(a.station_end,2)=E
+					and a.ticket_flag1=0 and a.ticket_flag2=1
+					and a.train_no=trainno
+					and date_format(date_add(date_format(substring(a.ticket_no,length(a.train_no)+1,8),'%Y-%m-%d'),interval stationtime2day day),'%Y%m%d')=day0;
+					set restnum=restnum+num;
+					fetch cur2 into trainno,stationtime2day;
+					
+				end while;
+				close cur2;
+				update restticket set rest0=restnum
+				where station_end=E and station_start=S;
+				
+				drop table if exists ttt;
+				
+				Create TEMPORARY table ttt (Select train_no,station_time2_day from stationtable where left(station_start,2)=S);
+				insert into ttt value('#',0);
+				
+				set restnum=0;
+				set num=0;
+			
+				open cur2;
+				fetch cur2 into trainno,stationtime2day;
+				while(trainno<>'#')do
+					select count(*) into num from 
+					tickettable a 
+					where left(a.station_start,2)=S and left(a.station_end,2)=E
+					and a.ticket_flag1=0 and a.ticket_flag2=1
+					and a.train_no=trainno
+					and date_format(date_add(date_format(substring(a.ticket_no,length(a.train_no)+1,8),'%Y-%m-%d'),interval stationtime2day day),'%Y%m%d')=day1;
+					set restnum=restnum+num;
+					fetch cur2 into trainno,stationtime2day;
+					
+				end while;
+				close cur2;
+				update restticket set rest1=restnum
+				where station_end=E and station_start=S;
+				
+				drop table if exists ttt;
+				
+				Create TEMPORARY table ttt (Select train_no,station_time2_day from stationtable where left(station_start,2)=S);
+				insert into ttt value('#',0);
+				
+				set restnum=0;
+				set num=0;
+			
+				open cur2;
+				fetch cur2 into trainno,stationtime2day;
+				while(trainno<>'#')do
+					select count(*) into num from 
+					tickettable a 
+					where left(a.station_start,2)=S and left(a.station_end,2)=E
+					and a.ticket_flag1=0 and a.ticket_flag2=1
+					and a.train_no=trainno
+					and date_format(date_add(date_format(substring(a.ticket_no,length(a.train_no)+1,8),'%Y-%m-%d'),interval stationtime2day day),'%Y%m%d')=day2;
+					set restnum=restnum+num;
+					fetch cur2 into trainno,stationtime2day;
+					
+				end while;
+				close cur2;
+				update restticket set rest2=restnum
+				where station_end=E and station_start=S;
+				
+				drop table if exists ttt;
+				
+				Create TEMPORARY table ttt (Select train_no,station_time2_day from stationtable where left(station_start,2)=S);
+				insert into ttt value('#',0);
+				
+				set restnum=0;
+				set num=0;
+			
+				open cur2;
+				fetch cur2 into trainno,stationtime2day;
+				while(trainno<>'#')do
+					select count(*) into num from 
+					tickettable a 
+					where left(a.station_start,2)=S and left(a.station_end,2)=E
+					and a.ticket_flag1=0 and a.ticket_flag2=1
+					and a.train_no=trainno
+					and date_format(date_add(date_format(substring(a.ticket_no,length(a.train_no)+1,8),'%Y-%m-%d'),interval stationtime2day day),'%Y%m%d')=day3;
+					set restnum=restnum+num;
+					fetch cur2 into trainno,stationtime2day;
+					
+				end while;
+				close cur2;
+				update restticket set rest3=restnum
+				where station_end=E and station_start=S;
+				
+				
+				fetch cur into S,E;
+     	end while;
+			
+
+		close cur;
+		
+	end;
+//
+DELIMITER ;
+
+
+DELIMITER //
+drop procedure if exists recharge;
+create procedure recharge(username varchar(20),cardno varchar(20),cardmoney double)
+begin
+update cardtable set card_flag=1 where card_id=cardno;
+update user set user_money=user_money+cardmoney where user_username=username;
+end;
+//
+DELIMITER ;
+
+DELIMITER //
+drop procedure if exists orderticket;
+create procedure orderticket(trainno varchar(10),S varchar(20),E varchar(20),TT varchar(20),seattype varchar(10),username varchar(20))
+	begin
+		
+		/*TT 要出行的日子 %Y%m%d */
+		/*seattype 是一个整形，从1到11代表11种座位*/
+		declare trainnum int default null;/*站序最大值，就是车站的个数*/
+		declare dada varchar(20);/*捕捉车次总发车时间的前8位*/
+		declare numS int default 0;
+		declare numE int default 0;
+		declare orderno varchar(30);
+		declare ticketno varchar(30);
+		declare ordertime datetime;   /*下单时间=系统时间*/
+		declare useday int default null;/*全部行程用日*/
+		declare t_error int default 0;
+		declare k_error int default 0;
+		declare flag int default 0;
+		declare res varchar(30) default '*';
+		declare shorttrainno varchar(30);/*包含座位id，车票号的前半段*/
+		declare i int default 1;
+		declare j int;
+		declare k int default 0;
+		declare tablename varchar(40);
+		declare str varchar(300);
+		
+		declare userorder_num int;/*找到userorder表中 某用户 订单的最大值*/
+		declare continue handler for sqlexception SET t_error=1;  
+		
+		
+		/*计算出列车第一站出发的日期，为了定位到确定的一列车次*/
+		select date_format(date_sub(TT,interval station_time1_day day),'%Y%m%d') into dada from stationtable where train_no=trainno and station_start=S;
+
+		/*系统时间*/
+		
+		select now() into ordertime;
+		/*查询最大站序，用户选择的日期一定要在车次表里两个日期之间 确定唯一*/
+		select train_num into trainnum from trainnotable where train_no=trainno and 
+		DATE_FORMAT(train_time1,'%Y%m%d')=dada;
+		
+		/*找到两个地点的站序编号*/
+		select station_order into numS from stationtable where train_no=trainno and station_start=S;
+		select station_order into numE from stationtable where train_no=trainno and station_start=E;
+		
+		
+		select ticket_no,ticket_flag2 into ticketno,flag from tickettable where train_no=trainno 
+		and right(ticket_no,4)=concat(LPAD(numS,2,0),LPAD(numE,2,0)) 
+		and ticket_flag1=0 and ticket_flag2=1 and substring(ticket_no,length(trainno)+1,8)=dada
+		and substring(ticket_no,length(trainno)+9,5)+0 in (select seat_id from seattable where seat_type=seattype)
+		limit 1
+		;
+
+		/*截取座位id*/
+		select left(ticketno,length(trainno)+8+5) into shorttrainno;
+
+		START TRANSACTION;
+			while i<=numS do
+				set j=numS+1;
+				while j<=trainnum do
+					update tickettable set ticket_flag2=0 where left(ticket_no,length(train_no)+5+8)=shorttrainno 
+					and right(ticket_no,4)=concat(LPAD(i,2,0),LPAD(j,2,0))
+					and ticket_flag1=0 and ticket_flag2=1;
+						IF t_error = 1 THEN  
+							ROLLBACK;  
+						ELSE  
+							set k=1;
+							COMMIT;  
+						END IF;  
+					set j=j+1;
+				end while;
+				set i=i+1;
+			end while;	
+			
+			set i=numS+1;
+			while i<=numE-1 do
+				set j=i+1;
+				while j<=trainnum do
+					update tickettable set ticket_flag2=0 where left(ticket_no,length(train_no)+5+8)=shorttrainno 
+					and right(ticket_no,4)=concat(LPAD(i,2,0),LPAD(j,2,0))
+					and ticket_flag1=0 and ticket_flag2=1; 
+						IF t_error = 1 THEN  
+							ROLLBACK;  
+						ELSE  
+							COMMIT;
+						END IF;  
+					set j=j+1;
+				end while;
+				set i=i+1;
+			end while;
+			
+			select ifnull(max(substring_index(order_no,'#',-1)),0)+1  into userorder_num from userorder; 
+			set orderno=concat(username,'#',LPAD(userorder_num,6,0));
+			IF flag=1 THEN
+				insert into userorder values(orderno,ticketno,ordertime,0,username);
+				IF t_error = 1 THEN  
+					ROLLBACK;  
+				ELSE  
+					COMMIT;  
+					set res='#';
+					select concat(res,orderno);
+				END IF; 
+			END IF; 
+
+	end;
+//
+DELIMITER ;
+
+
+DELIMITER //
+drop procedure if exists cancelticket;
+create procedure cancelticket(orderno varchar(30))
+	begin
+		declare username varchar(30);
+		declare ticketno varchar(30);
+		declare cost float(7,1);
+		declare trainno varchar(20);
+		declare trainnum int;
+		declare numS int;
+		declare numE int;
+		declare S varchar(20);
+		declare E varchar(20);
+		declare shorttrainno varchar(30);
+		declare i int default 1;
+		declare j int;
+		declare R varchar(10) default '*';
+		declare t_error int default 0;
+		declare continue handler for sqlexception SET t_error=1;  
+		
+		
+		
+		select user_username,ticket_no into username,ticketno from userorder where order_no=orderno;
+		select ticket_money into cost from tickettable where ticket_no=ticketno;
+		
+		select train_no,station_start,station_end into trainno,S,E from tickettable where ticket_no=ticketno;
+		
+		select train_num into trainnum from trainnotable where date(train_time1)=substring(ticketno,length(trainno)+1,8) and train_no=trainno;
+		select station_order into numS from stationtable where train_no=trainno and station_start=S;
+		select station_order into numE from stationtable where train_no=trainno and station_start=E;
+		select left(ticketno,length(trainno)+8+5) into shorttrainno;
+		
+		START TRANSACTION;
+			while i<=numS do
+				set j=numS+1;
+				while j<=trainnum do
+					update tickettable set ticket_flag1=0,ticket_flag2=1 where left(ticket_no,length(train_no)+5+8)=shorttrainno 
+					and right(ticket_no,4)=concat(LPAD(i,2,0),LPAD(j,2,0))
+					and ticket_flag1=0 and ticket_flag2=0; 
+						IF t_error = 1 THEN  
+							ROLLBACK;  
+						ELSE  
+							COMMIT;  
+						END IF;  
+					set j=j+1;
+				end while;
+				set i=i+1;
+			end while;	
+			
+			set i=numS+1;
+			while i<=numE-1 do
+				set j=i+1;
+				while j<=trainnum do
+					update tickettable set ticket_flag1=0,ticket_flag2=1 where left(ticket_no,length(train_no)+5+8)=shorttrainno 
+					and right(ticket_no,4)=concat(LPAD(i,2,0),LPAD(j,2,0))
+					and ticket_flag1=0 and ticket_flag2=0; 
+						IF t_error = 1 THEN  
+							ROLLBACK;  
+						ELSE  
+							COMMIT;  
+						END IF;  
+					set j=j+1;
+				end while;
+				set i=i+1;
+			end while;
+			
+			update tickettable set ticket_flag1=0 and ticket_flag2=1 where ticket_no=ticketno;
+			update user set user_money=user_money+cost where user_username=username;
+			update userorder set order_flag=3 where order_no=orderno;
+			update tickettable set ticket_flag1=0,ticket_flag2=1 where ticket_no=ticketno;
+			
+			IF t_error = 1 THEN  
+				ROLLBACK;  
+			ELSE  
+				COMMIT;
+				set R='#';
+				select R;
+			END IF;
+	end;
+//
+DELIMITER ;
+
+
+
+drop event if exists autotask;
+create event autotask on schedule EVERY 1 SECOND
+on completion preserve do 
+update userorder set order_flag=4 where order_flag=0 and timestampdiff(second, order_time,now())>=1800;
+
+
+drop event if exists autotask2;
+create event autotask2 on schedule EVERY 1 second
+on completion preserve do 
+update userorder set order_flag=5 where order_flag=1 and order_no in (
+select x.order_no from( 
+select a.order_no from userorder a,tickettable b,stationtable c
+where a.ticket_no=b.ticket_no 
+and a.order_flag=1
+and b.station_start=c.station_start 
+and b.train_no=c.train_no
+and now()>concat(date(date_add(date_format(substring(b.ticket_no,length(b.train_no)+1,8),'%Y-%m-%d'),interval station_time2_day day)),' ',time(station_time2)))x);
+
+
+
+drop event if exists autoaddticket;
+create event autoaddticket on schedule 
+EVERY 1 day starts '2016-03-02 23:05:00'
+do call everynightadd();
+
+
+delete from tickettable;
+delete from userorder;
+delete from stationtable;
+delete from costtable;
+delete from seattable;
+delete from trainnotable;
+
+insert into trainnotable values
+('Z99','上海虹桥','广州东','直达',4,'20160411180200','20160412100800','16:06:00',1,null,null,null,null,null,null,30,null,30,30,null);
+insert into trainnotable values                       
+('Z99','上海虹桥','广州东','直达',4,'20160412180200','20160413100800','16:06:00',1,null,null,null,null,null,null,30,null,30,30,null);
+insert into trainnotable values                       
+('Z99','上海虹桥','广州东','直达',4,'20160413180200','20160414100800','16:06:00',1,null,null,null,null,null,null,30,null,30,30,null);
+insert into trainnotable values                       
+('Z99','上海虹桥','广州东','直达',4,'20160414180200','20160415100800','16:06:00',1,null,null,null,null,null,null,30,null,30,30,null);
+insert into trainnotable values                       
+('Z99','上海虹桥','广州东','直达',4,'20160415180200','20160416100800','16:06:00',1,null,null,null,null,null,null,30,null,30,30,null);
+insert into trainnotable values                       
+('Z99','上海虹桥','广州东','直达',4,'20160416180200','20160417100800','16:06:00',1,null,null,null,null,null,null,30,null,30,30,null);
+insert into trainnotable values                       
+('Z99','上海虹桥','广州东','直达',4,'20160417180200','20160418100800','16:06:00',1,null,null,null,null,null,null,30,null,30,30,null);
+insert into trainnotable values                       
+('Z99','上海虹桥','广州东','直达',4,'20160418180200','20160419100800','16:06:00',1,null,null,null,null,null,null,30,null,30,30,null);
+insert into trainnotable values                       
+('Z99','上海虹桥','广州东','直达',4,'20160419180200','20160420100800','16:06:00',1,null,null,null,null,null,null,30,null,30,30,null);
+insert into trainnotable values                       
+('Z99','上海虹桥','广州东','直达',4,'20160420180200','20160421100800','16:06:00',1,null,null,null,null,null,null,30,null,30,30,null);
+insert into trainnotable values                       
+('Z99','上海虹桥','广州东','直达',4,'20160421180200','20160422100800','16:06:00',1,null,null,null,null,null,null,30,null,30,30,null);
+insert into trainnotable values                       
+('Z99','上海虹桥','广州东','直达',4,'20160422180200','20160423100800','16:06:00',1,null,null,null,null,null,null,30,null,30,30,null);
+insert into trainnotable values                       
+('Z99','上海虹桥','广州东','直达',4,'20160423180200','20160424100800','16:06:00',1,null,null,null,null,null,null,30,null,30,30,null);
+insert into trainnotable values      
+('Z99','上海虹桥','广州东','直达',4,'20160424180200','20160425100800','16:06:00',1,null,null,null,null,null,null,30,null,30,30,null);
+
+insert into stationtable values
+('Z99','上海虹桥',1,'直达',null,0,'180200',0);
+insert into stationtable values
+('Z99','金华',2,'直达','210400',0,'210800',0);
+insert into stationtable values
+('Z99','株洲',3,'直达','030500',1,'032100',1);
+insert into stationtable values
+('Z99','广州东',4,'直达','100800',1,'110400',1);
+
+insert into costtable values
+('Z99','上海虹桥','金华',null,null,null,null,null,null,100.5,null,54.5,54.5,null);
+insert into costtable values
+('Z99','上海虹桥','株洲',null,null,null,null,null,null,245.5,null,148.5,148.5,null);
+insert into costtable values
+('Z99','上海虹桥','广州东',null,null,null,null,null,null,353.5,null,206.5,206.5,null);
+insert into costtable values
+('Z99','金华','株洲',null,null,null,null,null,null,178.5,null,102.5,102.5,null);
+insert into costtable values
+('Z99','金华','广州东',null,null,null,null,null,null,296.5,null,173.5,173.5,null);
+insert into costtable values
+('Z99','株洲','广州东',null,null,null,null,null,null,158.5,null,91.5,91.5,null);
+
+insert into seattable values
+('1','Z99','硬卧','01','01');
+insert into seattable values
+('2','Z99','硬卧','01','02');
+insert into seattable values
+('3','Z99','硬卧','01','03');
+insert into seattable values
+('4','Z99','硬卧','01','04');
+insert into seattable values
+('5','Z99','硬卧','01','05');
+insert into seattable values
+('6','Z99','硬卧','01','06');
+insert into seattable values
+('7','Z99','硬卧','01','07');
+insert into seattable values
+('8','Z99','硬卧','01','08');
+insert into seattable values
+('9','Z99','硬卧','01','09');
+insert into seattable values
+('10','Z99','硬卧','01','10');
+
+insert into seattable values
+('11','Z99','硬卧','01','11');
+insert into seattable values
+('12','Z99','硬卧','01','12');
+insert into seattable values
+('13','Z99','硬卧','01','13');
+insert into seattable values
+('14','Z99','硬卧','01','14');
+insert into seattable values
+('15','Z99','硬卧','01','15');
+insert into seattable values
+('16','Z99','硬卧','01','16');
+insert into seattable values
+('17','Z99','硬卧','01','17');
+insert into seattable values
+('18','Z99','硬卧','01','18');
+insert into seattable values
+('19','Z99','硬卧','01','19');
+insert into seattable values
+('20','Z99','硬卧','01','20');
+
+insert into seattable values
+('21','Z99','硬卧','01','21');
+insert into seattable values
+('22','Z99','硬卧','01','22');
+insert into seattable values
+('23','Z99','硬卧','01','23');
+insert into seattable values
+('24','Z99','硬卧','01','24');
+insert into seattable values
+('25','Z99','硬卧','01','25');
+insert into seattable values
+('26','Z99','硬卧','01','26');
+insert into seattable values
+('27','Z99','硬卧','01','27');
+insert into seattable values
+('28','Z99','硬卧','01','28');
+insert into seattable values
+('29','Z99','硬卧','01','29');
+insert into seattable values
+('30','Z99','硬卧','01','30');
+
+
+insert into seattable values
+('31','Z99','硬座','02','01');
+insert into seattable values
+('32','Z99','硬座','02','02');
+insert into seattable values
+('33','Z99','硬座','02','03');
+insert into seattable values
+('34','Z99','硬座','02','04');
+insert into seattable values
+('35','Z99','硬座','02','05');
+insert into seattable values
+('36','Z99','硬座','02','06');
+insert into seattable values
+('37','Z99','硬座','02','07');
+insert into seattable values
+('38','Z99','硬座','02','08');
+insert into seattable values
+('39','Z99','硬座','02','09');
+insert into seattable values
+('40','Z99','硬座','02','10');
+
+insert into seattable values
+('41','Z99','硬座','02','11');
+insert into seattable values
+('42','Z99','硬座','02','12');
+insert into seattable values
+('43','Z99','硬座','02','13');
+insert into seattable values
+('44','Z99','硬座','02','14');
+insert into seattable values
+('45','Z99','硬座','02','15');
+insert into seattable values
+('46','Z99','硬座','02','16');
+insert into seattable values
+('47','Z99','硬座','02','17');
+insert into seattable values
+('48','Z99','硬座','02','18');
+insert into seattable values
+('49','Z99','硬座','02','19');
+insert into seattable values
+('50','Z99','硬座','02','20');
+
+insert into seattable values
+('51','Z99','硬座','02','21');
+insert into seattable values
+('52','Z99','硬座','02','22');
+insert into seattable values
+('53','Z99','硬座','02','23');
+insert into seattable values
+('54','Z99','硬座','02','24');
+insert into seattable values
+('55','Z99','硬座','02','25');
+insert into seattable values
+('56','Z99','硬座','02','26');
+insert into seattable values
+('57','Z99','硬座','02','27');
+insert into seattable values
+('58','Z99','硬座','02','28');
+insert into seattable values
+('59','Z99','硬座','02','29');
+insert into seattable values
+('60','Z99','硬座','02','30');
+
+insert into seattable values
+('61','Z99','无座','03','01');
+insert into seattable values
+('62','Z99','无座','03','02');
+insert into seattable values
+('63','Z99','无座','03','03');
+insert into seattable values
+('64','Z99','无座','03','04');
+insert into seattable values
+('65','Z99','无座','03','05');
+insert into seattable values
+('66','Z99','无座','03','06');
+insert into seattable values
+('67','Z99','无座','03','07');
+insert into seattable values
+('68','Z99','无座','03','08');
+insert into seattable values
+('69','Z99','无座','03','09');
+insert into seattable values
+('70','Z99','无座','03','10');
+
+insert into seattable values
+('71','Z99','无座','03','11');
+insert into seattable values
+('72','Z99','无座','03','12');
+insert into seattable values
+('73','Z99','无座','03','13');
+insert into seattable values
+('74','Z99','无座','03','14');
+insert into seattable values
+('75','Z99','无座','03','15');
+insert into seattable values
+('76','Z99','无座','03','16');
+insert into seattable values
+('77','Z99','无座','03','17');
+insert into seattable values
+('78','Z99','无座','03','18');
+insert into seattable values
+('79','Z99','无座','03','19');
+insert into seattable values
+('80','Z99','无座','03','20');
+
+insert into seattable values
+('81','Z99','无座','03','21');
+insert into seattable values
+('82','Z99','无座','03','22');
+insert into seattable values
+('83','Z99','无座','03','23');
+insert into seattable values
+('84','Z99','无座','03','24');
+insert into seattable values
+('85','Z99','无座','03','25');
+insert into seattable values
+('86','Z99','无座','03','26');
+insert into seattable values
+('87','Z99','无座','03','27');
+insert into seattable values
+('88','Z99','无座','03','28');
+insert into seattable values
+('89','Z99','无座','03','29');
+insert into seattable values
+('90','Z99','无座','03','30');
+
+insert into trainnotable values
+('G102','上海虹桥','北京南','高铁',9,'20160411064300','20160413121800','05:35:00',2,30,null,30,30,null,null,null,null,null,null,null);
+insert into trainnotable values                                
+('G102','上海虹桥','北京南','高铁',9,'20160412064300','20160414121800','05:35:00',2,30,null,30,30,null,null,null,null,null,null,null);
+insert into trainnotable values                                
+('G102','上海虹桥','北京南','高铁',9,'20160413064300','20160415121800','05:35:00',2,30,null,30,30,null,null,null,null,null,null,null);
+insert into trainnotable values                                
+('G102','上海虹桥','北京南','高铁',9,'20160414064300','20160416121800','05:35:00',2,30,null,30,30,null,null,null,null,null,null,null);
+insert into trainnotable values                                
+('G102','上海虹桥','北京南','高铁',9,'20160415064300','20160417121800','05:35:00',2,30,null,30,30,null,null,null,null,null,null,null);
+insert into trainnotable values                                
+('G102','上海虹桥','北京南','高铁',9,'20160416064300','20160418121800','05:35:00',2,30,null,30,30,null,null,null,null,null,null,null);
+insert into trainnotable values                                
+('G102','上海虹桥','北京南','高铁',9,'20160417064300','20160419121800','05:35:00',2,30,null,30,30,null,null,null,null,null,null,null);
+insert into trainnotable values                                
+('G102','上海虹桥','北京南','高铁',9,'20160418064300','20160420121800','05:35:00',2,30,null,30,30,null,null,null,null,null,null,null);
+insert into trainnotable values                                
+('G102','上海虹桥','北京南','高铁',9,'20160419064300','20160421121800','05:35:00',2,30,null,30,30,null,null,null,null,null,null,null);
+insert into trainnotable values                                
+('G102','上海虹桥','北京南','高铁',9,'20160420064300','20160422121800','05:35:00',2,30,null,30,30,null,null,null,null,null,null,null);
+insert into trainnotable values                                
+('G102','上海虹桥','北京南','高铁',9,'20160421064300','20160423121800','05:35:00',2,30,null,30,30,null,null,null,null,null,null,null);
+insert into trainnotable values                                
+('G102','上海虹桥','北京南','高铁',9,'20160422064300','20160424121800','05:35:00',2,30,null,30,30,null,null,null,null,null,null,null);
+insert into trainnotable values               
+('G102','上海虹桥','北京南','高铁',9,'20160423064300','20160425121800','05:35:00',2,30,null,30,30,null,null,null,null,null,null,null);
+insert into trainnotable values               
+('G102','上海虹桥','北京南','高铁',9,'20160424064300','20160426121800','05:35:00',2,30,null,30,30,null,null,null,null,null,null,null);
+
+
+insert into stationtable values
+('G102','上海虹桥',1,'高铁',null,0,'064300',0);
+insert into stationtable values
+('G102','苏州北',2,'高铁','070600',0,'070800',0);
+insert into stationtable values
+('G102','常州北',3,'高铁','073000',0,'073200',0);
+insert into stationtable values
+('G102','南京南',4,'高铁','080600',0,'080900',0);
+insert into stationtable values
+('G102','滁州',5,'高铁','082700',0,'082900',0);
+insert into stationtable values
+('G102','枣庄',6,'高铁','094300',0,'094600',0);
+insert into stationtable values
+('G102','济南西',7,'高铁','103600',0,'103900',0);
+insert into stationtable values
+('G102','德州东',8,'高铁','110300',0,'110500',0);
+insert into stationtable values
+('G102','北京南',9,'高铁','121800',0,'121800',0);
+
+
+
+insert into costtable values
+('G102','上海虹桥','苏州北',119.5,null,64.5,34.5,null,null,null,null,null,null,null);
+insert into costtable values
+('G102','上海虹桥','常州北',119.5,null,64.5,34.5,null,null,null,null,null,null,null);
+insert into costtable values
+('G102','上海虹桥','南京南',119.5,null,64.5,34.5,null,null,null,null,null,null,null);
+insert into costtable values
+('G102','上海虹桥','滁州',514.5,null,274.5,164.5,null,null,null,null,null,null,null);
+insert into costtable values
+('G102','上海虹桥','枣庄',974.0,null,519.5,309.5,null,null,null,null,null,null,null);
+insert into costtable values
+('G102','上海虹桥','济南西',1263.5,null,673.5,398.5,null,null,null,null,null,null,null);
+insert into costtable values
+('G102','上海虹桥','德州东',1383.5,null,738.5,438.5,null,null,null,null,null,null,null);
+insert into costtable values
+('G102','上海虹桥','北京南',1748.0,null,933.0,553.0,null,null,null,null,null,null,null);
+insert into costtable values
+('G102','苏州北','常州北',119.5,null,64.5,39.5,null,null,null,null,null,null,null);
+insert into costtable values
+('G102','苏州北','南京南',309.5,null,164.5,99.5,null,null,null,null,null,null,null);
+insert into costtable values
+('G102','苏州北','滁州',394.5,null,134.5,84.5,null,null,null,null,null,null,null);
+insert into costtable values
+('G102','苏州北','枣庄',869.0,null,464.5,274.0,null,null,null,null,null,null,null);
+insert into costtable values
+('G102','苏州北','济南西',1159.0,null,619.0,364.0,null,null,null,null,null,null,null);
+insert into costtable values
+('G102','苏州北','德州东',1278.5,null,678.5,403.5,null,null,null,null,null,null,null);
+insert into costtable values
+('G102','苏州北','北京南',1653.5,null,883.5,523.5,null,null,null,null,null,null,null);
+insert into costtable values
+('G102','常州北','南京南',189.5,null,99.5,59.5,null,null,null,null,null,null,null);
+insert into costtable values
+('G102','常州北','滁州',274.5,null,144.5,84.5,null,null,null,null,null,null,null);
+insert into costtable values
+('G102','常州北','枣庄',759.0,null,404.0,239.0,null,null,null,null,null,null,null);
+insert into costtable values
+('G102','常州北','济南西',1049.0,null,559.0,334.0,null,null,null,null,null,null,null);
+insert into costtable values
+('G102','常州北','德州东',1169.0,null,624.0,369.0,null,null,null,null,null,null,null);
+insert into costtable values
+('G102','常州北','北京南',1553.5,null,828.5,493.5,null,null,null,null,null,null,null);
+insert into costtable values
+('G102','南京南','滁州',84.5,null,44.5,24.5,null,null,null,null,null,null,null);
+insert into costtable values
+('G102','南京南','枣庄',574.5,null,304.5,179.5,null,null,null,null,null,null,null);
+insert into costtable values
+('G102','南京南','济南西',879.0,null,469.0,279.0,null,null,null,null,null,null,null);
+insert into costtable values
+('G102','南京南','德州东',999.0,null,534.0,314.0,null,null,null,null,null,null,null);
+insert into costtable values
+('G102','南京南','北京南',1403.5,null,748.5,443.5,null,null,null,null,null,null,null);
+insert into costtable values
+('G102','滁州','枣庄',489.5,null,259.5,154.5,null,null,null,null,null,null,null);
+insert into costtable values
+('G102','滁州','济南西',799.0,null,429.0,254.0,null,null,null,null,null,null,null);
+insert into costtable values
+('G102','滁州','德州东',919.0,null,489.10,289.0,null,null,null,null,null,null,null);
+insert into costtable values
+('G102','滁州','北京南',919.0,null,489.0,289.0,null,null,null,null,null,null,null);
+insert into costtable values
+('G102','枣庄','济南西',319.5,null,169.5,99.5,null,null,null,null,null,null,null);
+insert into costtable values
+('G102','枣庄','德州东',454.5,null,239.5,144.5,null,null,null,null,null,null,null);
+insert into costtable values
+('G102','枣庄','北京南',889.0,null,474.0,284.0,null,null,null,null,null,null,null);
+insert into costtable values
+('G102','济南西','德州东',134.5,null,69.5,39.5,null,null,null,null,null,null,null);
+insert into costtable values
+('G102','济南西','北京南',589.5,null,314.5,184.5,null,null,null,null,null,null,null);
+insert into costtable values
+('G102','德州东','北京南',454.5,null,244.5,144.5,null,null,null,null,null,null,null);
+
+
+insert into seattable values
+('1','G102','商务座','01','01');
+insert into seattable values
+('2','G102','商务座','01','02');
+insert into seattable values
+('3','G102','商务座','01','03');
+insert into seattable values
+('4','G102','商务座','01','04');
+insert into seattable values
+('5','G102','商务座','01','05');
+insert into seattable values
+('6','G102','商务座','01','06');
+insert into seattable values
+('7','G102','商务座','01','07');
+insert into seattable values
+('8','G102','商务座','01','08');
+insert into seattable values
+('9','G102','商务座','01','09');
+insert into seattable values
+('10','G102','商务座','01','10');
+
+insert into seattable values
+('11','G102','商务座','01','11');
+insert into seattable values
+('12','G102','商务座','01','12');
+insert into seattable values
+('13','G102','商务座','01','13');
+insert into seattable values
+('14','G102','商务座','01','14');
+insert into seattable values
+('15','G102','商务座','01','15');
+insert into seattable values
+('16','G102','商务座','01','16');
+insert into seattable values
+('17','G102','商务座','01','17');
+insert into seattable values
+('18','G102','商务座','01','18');
+insert into seattable values
+('19','G102','商务座','01','19');
+insert into seattable values
+('20','G102','商务座','01','20');
+
+insert into seattable values
+('21','G102','商务座','01','21');
+insert into seattable values
+('22','G102','商务座','01','22');
+insert into seattable values
+('23','G102','商务座','01','23');
+insert into seattable values
+('24','G102','商务座','01','24');
+insert into seattable values
+('25','G102','商务座','01','25');
+insert into seattable values
+('26','G102','商务座','01','26');
+insert into seattable values
+('27','G102','商务座','01','27');
+insert into seattable values
+('28','G102','商务座','01','28');
+insert into seattable values
+('29','G102','商务座','01','29');
+insert into seattable values
+('30','G102','商务座','01','30');
+
+
+insert into seattable values
+('31','G102','一等座','02','01');
+insert into seattable values
+('32','G102','一等座','02','02');
+insert into seattable values
+('33','G102','一等座','02','03');
+insert into seattable values
+('34','G102','一等座','02','04');
+insert into seattable values
+('35','G102','一等座','02','05');
+insert into seattable values
+('36','G102','一等座','02','06');
+insert into seattable values
+('37','G102','一等座','02','07');
+insert into seattable values
+('38','G102','一等座','02','08');
+insert into seattable values
+('39','G102','一等座','02','09');
+insert into seattable values
+('40','G102','一等座','02','10');
+
+insert into seattable values
+('41','G102','一等座','02','11');
+insert into seattable values
+('42','G102','一等座','02','12');
+insert into seattable values
+('43','G102','一等座','02','13');
+insert into seattable values
+('44','G102','一等座','02','14');
+insert into seattable values
+('45','G102','一等座','02','15');
+insert into seattable values
+('46','G102','一等座','02','16');
+insert into seattable values
+('47','G102','一等座','02','17');
+insert into seattable values
+('48','G102','一等座','02','18');
+insert into seattable values
+('49','G102','一等座','02','19');
+insert into seattable values
+('50','G102','一等座','02','20');
+
+insert into seattable values
+('51','G102','一等座','02','21');
+insert into seattable values
+('52','G102','一等座','02','22');
+insert into seattable values
+('53','G102','一等座','02','23');
+insert into seattable values
+('54','G102','一等座','02','24');
+insert into seattable values
+('55','G102','一等座','02','25');
+insert into seattable values
+('56','G102','一等座','02','26');
+insert into seattable values
+('57','G102','一等座','02','27');
+insert into seattable values
+('58','G102','一等座','02','28');
+insert into seattable values
+('59','G102','一等座','02','29');
+insert into seattable values
+('60','G102','一等座','02','30');
+
+insert into seattable values
+('61','G102','二等座','03','01');
+insert into seattable values
+('62','G102','二等座','03','02');
+insert into seattable values
+('63','G102','二等座','03','03');
+insert into seattable values
+('64','G102','二等座','03','04');
+insert into seattable values
+('65','G102','二等座','03','05');
+insert into seattable values
+('66','G102','二等座','03','06');
+insert into seattable values
+('67','G102','二等座','03','07');
+insert into seattable values
+('68','G102','二等座','03','08');
+insert into seattable values
+('69','G102','二等座','03','09');
+insert into seattable values
+('70','G102','二等座','03','10');
+
+insert into seattable values
+('71','G102','二等座','03','11');
+insert into seattable values
+('72','G102','二等座','03','12');
+insert into seattable values
+('73','G102','二等座','03','13');
+insert into seattable values
+('74','G102','二等座','03','14');
+insert into seattable values
+('75','G102','二等座','03','15');
+insert into seattable values
+('76','G102','二等座','03','16');
+insert into seattable values
+('77','G102','二等座','03','17');
+insert into seattable values
+('78','G102','二等座','03','18');
+insert into seattable values
+('79','G102','二等座','03','19');
+insert into seattable values
+('80','G102','二等座','03','20');
+
+insert into seattable values
+('81','G102','二等座','03','21');
+insert into seattable values
+('82','G102','二等座','03','22');
+insert into seattable values
+('83','G102','二等座','03','23');
+insert into seattable values
+('84','G102','二等座','03','24');
+insert into seattable values
+('85','G102','二等座','03','25');
+insert into seattable values
+('86','G102','二等座','03','26');
+insert into seattable values
+('87','G102','二等座','03','27');
+insert into seattable values
+('88','G102','二等座','03','28');
+insert into seattable values
+('89','G102','二等座','03','29');
+insert into seattable values
+('90','G102','二等座','03','30');
+
+
+insert into trainnotable values
+('G18','上海虹桥','北京南','高铁',4,'20160411150000','20160411195500','04:55:00',0,10,null,15,20,null,null,null,null,null,null,null);
+insert into trainnotable values                       
+('G18','上海虹桥','北京南','高铁',4,'20160412150000','20160412195500','04:55:00',0,10,null,15,20,null,null,null,null,null,null,null);
+insert into trainnotable values                       
+('G18','上海虹桥','北京南','高铁',4,'20160413150000','20160413195500','04:55:00',0,10,null,15,20,null,null,null,null,null,null,null);
+insert into trainnotable values                       
+('G18','上海虹桥','北京南','高铁',4,'20160414150000','20160414195500','04:55:00',0,10,null,15,20,null,null,null,null,null,null,null);
+insert into trainnotable values                       
+('G18','上海虹桥','北京南','高铁',4,'20160415150000','20160415195500','04:55:00',0,10,null,15,20,null,null,null,null,null,null,null);
+insert into trainnotable values                       
+('G18','上海虹桥','北京南','高铁',4,'20160416150000','20160416195500','04:55:00',0,10,null,15,20,null,null,null,null,null,null,null);
+insert into trainnotable values                       
+('G18','上海虹桥','北京南','高铁',4,'20160417150000','20160417195500','04:55:00',0,10,null,15,20,null,null,null,null,null,null,null);
+insert into trainnotable values                       
+('G18','上海虹桥','北京南','高铁',4,'20160418150000','20160418195500','04:55:00',0,10,null,15,20,null,null,null,null,null,null,null);
+insert into trainnotable values                       
+('G18','上海虹桥','北京南','高铁',4,'20160419150000','20160419195500','04:55:00',0,10,null,15,20,null,null,null,null,null,null,null);
+insert into trainnotable values                       
+('G18','上海虹桥','北京南','高铁',4,'20160420150000','20160420195500','04:55:00',0,10,null,15,20,null,null,null,null,null,null,null);
+insert into trainnotable values                       
+('G18','上海虹桥','北京南','高铁',4,'20160421150000','20160421195500','04:55:00',0,10,null,15,20,null,null,null,null,null,null,null);
+insert into trainnotable values                       
+('G18','上海虹桥','北京南','高铁',4,'20160422150000','20160422195500','04:55:00',0,10,null,15,20,null,null,null,null,null,null,null);
+insert into trainnotable values                       
+('G18','上海虹桥','北京南','高铁',4,'20160423150000','20160423195500','04:55:00',0,10,null,15,20,null,null,null,null,null,null,null);
+insert into trainnotable values                       
+('G18','上海虹桥','北京南','高铁',4,'20160424150000','20160424195500','04:55:00',0,10,null,15,20,null,null,null,null,null,null,null);
+
+insert into stationtable values
+('G18','上海虹桥',1,'高铁',null,0,'150000',0);
+insert into stationtable values
+('G18','南京南',2,'高铁','160700',0,'160900',0);
+insert into stationtable values
+('G18','济南西',3,'高铁','182100',0,'182300',0);
+insert into stationtable values
+('G18','北京南',4,'高铁','195500',0,'195500',0);
+
+insert into costtable values
+('G18','上海虹桥','南京南',429.5,null,229.5,134.5,null,null,null,null,null,null,null);
+insert into costtable values
+('G18','上海虹桥','济南西',1263.5,null,673.5,398.5,null,null,null,null,null,null,null);
+insert into costtable values
+('G18','上海虹桥','北京南',1748,null,933,533,null,null,null,null,null,null,null);
+insert into costtable values
+('G18','南京南','济南西',879,null,469,279,null,null,null,null,null,null,null);
+insert into costtable values
+('G18','南京南','北京南',879,null,469,279,null,null,null,null,null,null,null);
+insert into costtable values
+('G18','济南西','北京南',589.5,null,314.5,184.5,null,null,null,null,null,null,null);
+
+insert into seattable values
+('1','G18','商务座','01','01');
+insert into seattable values
+('2','G18','商务座','01','02');
+insert into seattable values
+('3','G18','商务座','01','03');
+insert into seattable values
+('4','G18','商务座','01','04');
+insert into seattable values
+('5','G18','商务座','01','05');
+insert into seattable values
+('6','G18','商务座','01','06');
+insert into seattable values
+('7','G18','商务座','01','07');
+insert into seattable values
+('8','G18','商务座','01','08');
+insert into seattable values
+('9','G18','商务座','01','09');
+insert into seattable values
+('10','G18','商务座','01','10');
+insert into seattable values
+('11','G18','一等座','02','01');
+insert into seattable values
+('12','G18','一等座','02','02');
+insert into seattable values
+('13','G18','一等座','02','03');
+insert into seattable values
+('14','G18','一等座','02','04');
+insert into seattable values
+('15','G18','一等座','02','05');
+insert into seattable values
+('16','G18','一等座','02','06');
+insert into seattable values
+('17','G18','一等座','02','07');
+insert into seattable values
+('18','G18','一等座','02','08');
+insert into seattable values
+('19','G18','一等座','02','09');
+insert into seattable values
+('20','G18','一等座','02','10');
+insert into seattable values
+('21','G18','一等座','02','11');
+insert into seattable values
+('22','G18','一等座','02','12');
+insert into seattable values
+('23','G18','一等座','02','13');
+insert into seattable values
+('24','G18','一等座','02','14');
+insert into seattable values
+('25','G18','一等座','02','15');
+
+
+insert into seattable values
+('26','G18','二等座','03','01');
+insert into seattable values
+('27','G18','二等座','03','02');
+insert into seattable values
+('28','G18','二等座','03','03');
+insert into seattable values
+('29','G18','二等座','03','04');
+insert into seattable values
+('30','G18','二等座','03','05');
+insert into seattable values
+('31','G18','二等座','03','06');
+insert into seattable values
+('32','G18','二等座','03','07');
+insert into seattable values
+('33','G18','二等座','03','08');
+insert into seattable values
+('34','G18','二等座','03','09');
+insert into seattable values
+('35','G18','二等座','03','10');
+
+insert into seattable values
+('36','G18','二等座','03','11');
+insert into seattable values
+('37','G18','二等座','03','12');
+insert into seattable values
+('38','G18','二等座','03','13');
+insert into seattable values
+('39','G18','二等座','03','14');
+insert into seattable values
+('40','G18','二等座','03','15');
+insert into seattable values
+('41','G18','二等座','03','16');
+insert into seattable values
+('42','G18','二等座','03','17');
+insert into seattable values
+('43','G18','二等座','03','18');
+insert into seattable values
+('44','G18','二等座','03','19');
+insert into seattable values
+('45','G18','二等座','03','20');
+
+insert into trainnotable values
+('D3695','南宁东','广州南','动车',5,'20160411090000','20160411124300','03:43:00',0,null,null,30,30,null,null,null,null,null,30,null);
+insert into trainnotable values                       
+('D3695','南宁东','广州南','动车',5,'20160412090000','20160412124300','03:43:00',0,null,null,30,30,null,null,null,null,null,30,null);
+insert into trainnotable values                       
+('D3695','南宁东','广州南','动车',5,'20160413090000','20160413124300','03:43:00',0,null,null,30,30,null,null,null,null,null,30,null);
+insert into trainnotable values                                                   
+('D3695','南宁东','广州南','动车',5,'20160414090000','20160414124300','03:43:00',0,null,null,30,30,null,null,null,null,null,30,null);
+insert into trainnotable values                       
+('D3695','南宁东','广州南','动车',5,'20160415090000','20160415124300','03:43:00',0,null,null,30,30,null,null,null,null,null,30,null);
+insert into trainnotable values                                                    
+('D3695','南宁东','广州南','动车',5,'20160416090000','20160416124300','03:43:00',0,null,null,30,30,null,null,null,null,null,30,null);
+insert into trainnotable values                                                    
+('D3695','南宁东','广州南','动车',5,'20160417090000','20160417124300','03:43:00',0,null,null,30,30,null,null,null,null,null,30,null);
+insert into trainnotable values                                                    
+('D3695','南宁东','广州南','动车',5,'20160418090000','20160418124300','03:43:00',0,null,null,30,30,null,null,null,null,null,30,null);
+insert into trainnotable values                       
+('D3695','南宁东','广州南','动车',5,'20160419090000','20160419124300','03:43:00',0,null,null,30,30,null,null,null,null,null,30,null);
+insert into trainnotable values                                                    
+('D3695','南宁东','广州南','动车',5,'20160420090000','20160420124300','03:43:00',0,null,null,30,30,null,null,null,null,null,30,null);
+insert into trainnotable values                                                    
+('D3695','南宁东','广州南','动车',5,'20160421090000','20160421124300','03:43:00',0,null,null,30,30,null,null,null,null,null,30,null);
+insert into trainnotable values                                                    
+('D3695','南宁东','广州南','动车',5,'20160422090000','20160422124300','03:43:00',0,null,null,30,30,null,null,null,null,null,30,null);
+insert into trainnotable values                       
+('D3695','南宁东','广州南','动车',5,'20160423090000','20160423124300','03:43:00',0,null,null,30,30,null,null,null,null,null,30,null);
+insert into trainnotable values                       
+('D3695','南宁东','广州南','动车',5,'20160424090000','20160424124300','03:43:00',0,null,null,30,30,null,null,null,null,null,30,null);
+
+
+insert into stationtable values
+('D3695','南宁东',1,'动车',null,0,'090000',0);
+insert into stationtable values
+('D3695','贵港',2,'动车','095000',0,'095200',0);
+insert into stationtable values
+('D3695','梧州南',3,'动车','105500',0,'110300',0);
+insert into stationtable values
+('D3695','肇庆东',4,'动车','120500',0,'120700',0);
+insert into stationtable values
+('D3695','广州南',5,'动车','124300',0,'124300',0);
+
+
+insert into costtable values
+('D3695','南宁东','贵港',null,null,49.5,41.0,null,null,null,null,null,41.0,null);
+insert into costtable values
+('D3695','南宁东','梧州南',null,null,111.5,93.0,null,null,null,null,null,93.0,null);
+insert into costtable values
+('D3695','南宁东','肇庆东',null,null,174.5,145.5,null,null,null,null,null,145.5,null);
+insert into costtable values
+('D3695','南宁东','广州南',null,null,202.5,169.0,null,null,null,null,null,169.0,null);
+insert into costtable values
+('D3695','贵港','梧州南',null,null,202.5,169.0,null,null,null,null,null,169.0,null);
+insert into costtable values
+('D3695','贵港','肇庆东',null,null,125.0,104.5,null,null,null,null,null,104.5,null);
+insert into costtable values
+('D3695','贵港','广州南',null,null,153.0,128.0,null,null,null,null,null,128.0,null);
+insert into costtable values
+('D3695','梧州南','肇庆东',null,null,63.0,52.5,null,null,null,null,null,52.5,null);
+insert into costtable values
+('D3695','梧州南','广州南',null,null,91.0,76.0,null,null,null,null,null,76.0,null);
+insert into costtable values
+('D3695','肇庆东','广州南',null,null,28.0,23.5,null,null,null,null,null,23.5,null);
+
+insert into seattable values
+('1','D3695','一等座','01','01');
+insert into seattable values
+('2','D3695','一等座','01','02');
+insert into seattable values
+('3','D3695','一等座','01','03');
+insert into seattable values
+('4','D3695','一等座','01','04');
+insert into seattable values
+('5','D3695','一等座','01','05');
+insert into seattable values
+('6','D3695','一等座','01','06');
+insert into seattable values
+('7','D3695','一等座','01','07');
+insert into seattable values
+('8','D3695','一等座','01','08');
+insert into seattable values
+('9','D3695','一等座','01','09');
+insert into seattable values
+('10','D3695','一等座','01','10');
+
+insert into seattable values
+('11','D3695','一等座','01','11');
+insert into seattable values
+('12','D3695','一等座','01','12');
+insert into seattable values
+('13','D3695','一等座','01','13');
+insert into seattable values
+('14','D3695','一等座','01','14');
+insert into seattable values
+('15','D3695','一等座','01','15');
+insert into seattable values
+('16','D3695','一等座','01','16');
+insert into seattable values
+('17','D3695','一等座','01','17');
+insert into seattable values
+('18','D3695','一等座','01','18');
+insert into seattable values
+('19','D3695','一等座','01','19');
+insert into seattable values
+('20','D3695','一等座','01','20');
+
+insert into seattable values
+('21','D3695','一等座','01','21');
+insert into seattable values
+('22','D3695','一等座','01','22');
+insert into seattable values
+('23','D3695','一等座','01','23');
+insert into seattable values
+('24','D3695','一等座','01','24');
+insert into seattable values
+('25','D3695','一等座','01','25');
+insert into seattable values
+('26','D3695','一等座','01','26');
+insert into seattable values
+('27','D3695','一等座','01','27');
+insert into seattable values
+('28','D3695','一等座','01','28');
+insert into seattable values
+('29','D3695','一等座','01','29');
+insert into seattable values
+('30','D3695','一等座','01','30');
+
+
+insert into seattable values
+('31','D3695','二等座','02','01');
+insert into seattable values
+('32','D3695','二等座','02','02');
+insert into seattable values
+('33','D3695','二等座','02','03');
+insert into seattable values
+('34','D3695','二等座','02','04');
+insert into seattable values
+('35','D3695','二等座','02','05');
+insert into seattable values
+('36','D3695','二等座','02','06');
+insert into seattable values
+('37','D3695','二等座','02','07');
+insert into seattable values
+('38','D3695','二等座','02','08');
+insert into seattable values
+('39','D3695','二等座','02','09');
+insert into seattable values
+('40','D3695','二等座','02','10');
+
+insert into seattable values
+('41','D3695','二等座','02','11');
+insert into seattable values
+('42','D3695','二等座','02','12');
+insert into seattable values
+('43','D3695','二等座','02','13');
+insert into seattable values
+('44','D3695','二等座','02','14');
+insert into seattable values
+('45','D3695','二等座','02','15');
+insert into seattable values
+('46','D3695','二等座','02','16');
+insert into seattable values
+('47','D3695','二等座','02','17');
+insert into seattable values
+('48','D3695','二等座','02','18');
+insert into seattable values
+('49','D3695','二等座','02','19');
+insert into seattable values
+('50','D3695','二等座','02','20');
+
+insert into seattable values
+('51','D3695','二等座','02','21');
+insert into seattable values
+('52','D3695','二等座','02','22');
+insert into seattable values
+('53','D3695','二等座','02','23');
+insert into seattable values
+('54','D3695','二等座','02','24');
+insert into seattable values
+('55','D3695','二等座','02','25');
+insert into seattable values
+('56','D3695','二等座','02','26');
+insert into seattable values
+('57','D3695','二等座','02','27');
+insert into seattable values
+('58','D3695','二等座','02','28');
+insert into seattable values
+('59','D3695','二等座','02','29');
+insert into seattable values
+('60','D3695','二等座','02','30');
+
+insert into seattable values
+('61','D3695','无座','03','01');
+insert into seattable values
+('62','D3695','无座','03','02');
+insert into seattable values
+('63','D3695','无座','03','03');
+insert into seattable values
+('64','D3695','无座','03','04');
+insert into seattable values
+('65','D3695','无座','03','05');
+insert into seattable values
+('66','D3695','无座','03','06');
+insert into seattable values
+('67','D3695','无座','03','07');
+insert into seattable values
+('68','D3695','无座','03','08');
+insert into seattable values
+('69','D3695','无座','03','09');
+insert into seattable values
+('70','D3695','无座','03','10');
+
+insert into seattable values
+('71','D3695','无座','03','11');
+insert into seattable values
+('72','D3695','无座','03','12');
+insert into seattable values
+('73','D3695','无座','03','13');
+insert into seattable values
+('74','D3695','无座','03','14');
+insert into seattable values
+('75','D3695','无座','03','15');
+insert into seattable values
+('76','D3695','无座','03','16');
+insert into seattable values
+('77','D3695','无座','03','17');
+insert into seattable values
+('78','D3695','无座','03','18');
+insert into seattable values
+('79','D3695','无座','03','19');
+insert into seattable values
+('80','D3695','无座','03','20');
+
+insert into seattable values
+('81','D3695','无座','03','21');
+insert into seattable values
+('82','D3695','无座','03','22');
+insert into seattable values
+('83','D3695','无座','03','23');
+insert into seattable values
+('84','D3695','无座','03','24');
+insert into seattable values
+('85','D3695','无座','03','25');
+insert into seattable values
+('86','D3695','无座','03','26');
+insert into seattable values
+('87','D3695','无座','03','27');
+insert into seattable values
+('88','D3695','无座','03','28');
+insert into seattable values
+('89','D3695','无座','03','29');
+insert into seattable values
+('90','D3695','无座','03','30');
+
+
+
+
+
+
+
+
+
+
+call insertticket('G102','20160411');
+call insertticket('G102','20160412');
+call insertticket('G102','20160413');
+call insertticket('G102','20160414');
+call insertticket('G102','20160415');
+call insertticket('G102','20160416');
+call insertticket('G102','20160417');
+call insertticket('G102','20160418');
+call insertticket('G102','20160419');
+call insertticket('G102','20160420');
+call insertticket('G102','20160421');
+call insertticket('G102','20160422');
+call insertticket('G102','20160423');
+call insertticket('G102','20160424');
+
+
+
+call insertticket('G18','20160411');
+call insertticket('G18','20160412');
+call insertticket('G18','20160413');
+call insertticket('G18','20160414');
+call insertticket('G18','20160415');
+call insertticket('G18','20160416');
+call insertticket('G18','20160417');
+call insertticket('G18','20160418');
+call insertticket('G18','20160419');
+call insertticket('G18','20160420');
+call insertticket('G18','20160421');
+call insertticket('G18','20160422');
+call insertticket('G18','20160423');
+call insertticket('G18','20160424');
+
+call insertticket('Z99','20160411');
+call insertticket('Z99','20160412');
+call insertticket('Z99','20160413');
+call insertticket('Z99','20160414');
+call insertticket('Z99','20160415');
+call insertticket('Z99','20160416');
+call insertticket('Z99','20160417');
+call insertticket('Z99','20160418');
+call insertticket('Z99','20160419');
+call insertticket('Z99','20160420');
+call insertticket('Z99','20160421');
+call insertticket('Z99','20160422');
+call insertticket('Z99','20160423');
+call insertticket('Z99','20160424');
+
+
+call insertticket('D3695','20160411');
+call insertticket('D3695','20160412');
+call insertticket('D3695','20160413');
+call insertticket('D3695','20160414');
+call insertticket('D3695','20160415');
+call insertticket('D3695','20160416');
+call insertticket('D3695','20160417');
+call insertticket('D3695','20160418');
+call insertticket('D3695','20160419');
+call insertticket('D3695','20160420');
+call insertticket('D3695','20160421');
+call insertticket('D3695','20160422');
+call insertticket('D3695','20160423');
+call insertticket('D3695','20160424');
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

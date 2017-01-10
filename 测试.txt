@@ -1,0 +1,141 @@
+﻿delete from tickettable;
+delete from userorder;
+delete from stationtable;
+delete from costtable;
+delete from seattable;
+delete from trainnotable;
+
+call insertticket('G102','20160308');
+call insertticket('G102','20160309');
+call insertticket('G102','20160310');
+call insertticket('G102','20160311');
+call insertticket('G102','20160312');
+call insertticket('G102','20160313');
+call insertticket('G102','20160314');
+call insertticket('G102','20160315');
+call insertticket('G102','20160316');
+call insertticket('G102','20160317');
+call insertticket('G102','20160318');
+call insertticket('G102','20160319');
+call insertticket('G102','20160320');
+call insertticket('G102','20160321');
+
+call insertticket('G18','20160308');
+call insertticket('G18','20160309');
+call insertticket('G18','20160310');
+call insertticket('G18','20160311');
+call insertticket('G18','20160312');
+call insertticket('G18','20160313');
+call insertticket('G18','20160314');
+call insertticket('G18','20160315');
+call insertticket('G18','20160316');
+call insertticket('G18','20160317');
+call insertticket('G18','20160318');
+call insertticket('G18','20160319');
+call insertticket('G18','20160320');
+call insertticket('G18','20160321');
+
+call insertticket('Z99','20160308');
+call insertticket('Z99','20160309');
+call insertticket('Z99','20160310');
+call insertticket('Z99','20160311');
+call insertticket('Z99','20160312');
+call insertticket('Z99','20160313');
+call insertticket('Z99','20160314');
+call insertticket('Z99','20160315');
+call insertticket('Z99','20160316');
+call insertticket('Z99','20160317');
+call insertticket('Z99','20160318');
+call insertticket('Z99','20160319');
+call insertticket('Z99','20160320');
+call insertticket('Z99','20160321');
+
+
+call insertticket('D3659','20160308');
+call insertticket('D3659','20160309');
+call insertticket('D3659','20160310');
+call insertticket('D3659','20160311');
+call insertticket('D3659','20160312');
+call insertticket('D3659','20160313');
+call insertticket('D3659','20160314');
+call insertticket('D3659','20160315');
+call insertticket('D3659','20160316');
+call insertticket('D3659','20160317');
+call insertticket('D3659','20160318');
+call insertticket('D3659','20160319');
+call insertticket('D3659','20160320');
+call insertticket('D3659','20160321');
+
+
+call orderticket('G102','济南西','北京南','20160412','商务座','1');
+call orderticket('G102','南京南','滁州','20160309','一等座','1');
+call orderticket('G102','南京南','滁州','20160310','一等座','1');
+call orderticket('G102','上海虹桥','北京南','20160311','二等座','1');
+
+call orderticket('G102','上海虹桥','苏州北','20160308','一等座','1');
+call orderticket('G102','济南西','北京南','20160309','商务座','1');
+call orderticket('G102','南京南','滁州','20160310','一等座','1');
+
+
+
+call buyticket('1#000001');
+call buyticket('1#000002');
+call buyticket('1#000003');
+call buyticket('1#000004');
+call buyticket('1#000005');
+call buyticket('1#000006');
+call buyticket('1#000007');
+
+
+select count(*) from tickettable where ticket_flag1=0 and ticket_flag2=1;
+select count(*) from tickettable where ticket_flag1=0 and ticket_flag2=0;
+select count(*) from tickettable where ticket_flag1=1 and ticket_flag2=0;
+
+
+
+
+				
+				
+delete from restticket;
+insert into restticket(station_start,station_end) values('上海','苏州');
+insert into restticket(station_start,station_end) values('上海','常州');
+insert into restticket(station_start,station_end) values('上海','南京');
+insert into restticket(station_start,station_end) values('上海','滁州');
+insert into restticket(station_start,station_end) values('上海','枣庄');
+insert into restticket(station_start,station_end) values('上海','济南');
+insert into restticket(station_start,station_end) values('上海','德州');
+insert into restticket(station_start,station_end) values('上海','北京');
+insert into restticket(station_start,station_end) values('苏州','常州');
+insert into restticket(station_start,station_end) values('苏州','南京');
+insert into restticket(station_start,station_end) values('苏州','滁州');
+insert into restticket(station_start,station_end) values('苏州','枣庄');
+insert into restticket(station_start,station_end) values('苏州','济南');
+insert into restticket(station_start,station_end) values('苏州','德州');
+insert into restticket(station_start,station_end) values('苏州','北京');
+insert into restticket(station_start,station_end) values('常州','南京');
+insert into restticket(station_start,station_end) values('常州','滁州');
+insert into restticket(station_start,station_end) values('常州','枣庄');
+insert into restticket(station_start,station_end) values('常州','济南');
+insert into restticket(station_start,station_end) values('常州','德州');
+insert into restticket(station_start,station_end) values('常州','北京');
+insert into restticket(station_start,station_end) values('南京','滁州');
+insert into restticket(station_start,station_end) values('南京','枣庄');
+insert into restticket(station_start,station_end) values('南京','济南');
+insert into restticket(station_start,station_end) values('南京','德州');
+insert into restticket(station_start,station_end) values('南京','北京');
+insert into restticket(station_start,station_end) values('滁州','枣庄');
+insert into restticket(station_start,station_end) values('滁州','济南');
+insert into restticket(station_start,station_end) values('滁州','德州');
+insert into restticket(station_start,station_end) values('滁州','北京');
+insert into restticket(station_start,station_end) values('枣庄','济南');
+insert into restticket(station_start,station_end) values('枣庄','德州');
+insert into restticket(station_start,station_end) values('枣庄','北京');
+insert into restticket(station_start,station_end) values('济南','德州');
+insert into restticket(station_start,station_end) values('济南','北京');
+insert into restticket(station_start,station_end) values('德州','北京');
+insert into restticket(station_start,station_end) values('#','#');
+
+
+
+
+

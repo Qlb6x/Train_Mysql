@@ -1,0 +1,16 @@
+DELIMITER //
+drop trigger if exists autotrigger;
+create trigger autotrigger
+after update on userorder
+for each row
+	begin
+		if (new.order_flag=4) then
+			call cancelorder2(new.ticket_no,new.order_no);
+		END IF;
+	end;
+//
+DELIMITER ;
+
+
+
+

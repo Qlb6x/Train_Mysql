@@ -1,0 +1,4 @@
+drop event if exists autodelticket;
+create event autodelticket on schedule 
+EVERY 1 day starts '2016-03-07 23:59:00'
+do call everynightdel();

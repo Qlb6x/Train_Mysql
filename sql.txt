@@ -1,0 +1,162 @@
+﻿create database hcp;
+use hcp;
+create table admin(
+	admin_sex varchar(2) not null,
+	admin_phone varchar(12) not null,
+	admin_id varchar(5) not null,
+	admin_surname varchar(10) not null,
+	admin_username varchar(20) primary key not null,
+	admin_password varchar(20) not null
+);
+insert into admin values
+('男','18721212580','1','刘顺裕','lsy','666666');
+insert into admin values
+('男','13916174568','2','马振伟','mzw','123456');
+create table user(
+	user_surname varchar(10) not null,
+	user_id varchar(18) not null,
+	user_phone varchar(20) not null,
+	user_username varchar(20) primary key not null,
+	user_password varchar(20) not null,
+	user_money float(7,1) unsigned null default 0
+);
+insert into user values
+('李应','310113164756568456','18721212584','1','111111',50000.5);
+insert into user values
+('高守信','312224454521253524','18721212547','2','222222',50000.5);
+
+create table trainnotable(
+	train_no varchar(10)  not null,
+	train_start varchar(20) not null,
+	train_end varchar(20) not null,
+	train_type varchar(20) not null,
+	train_num int not null,
+	train_time1 datetime not null,
+	train_time2 datetime not null,
+	train_used_time time not null,
+	train_used_day int not null,
+	train_num1 int null default null,
+	train_num2 int null default null,
+	train_num3 int null default null,
+	train_num4 int null default null,
+	train_num5 int null default null,
+	train_num6 int null default null,
+	train_num7 int null default null,
+	train_num8 int null default null,
+	train_num9 int null default null,
+	train_num10 int null default null,
+	train_num11 int null default null,
+	primary key(train_no,train_time1)
+);
+
+create table stationtable(
+	train_no varchar(10) not null,
+	station_start varchar(20) not null,
+	station_order int not null,
+	train_type varchar(20) not null,
+	station_time1 time null,
+	station_time1_day int,
+	station_time2 time not null,
+	station_time2_day int not null,
+	primary key(train_no,station_order)
+);
+
+create table costtable(
+	train_no varchar(10) not null,
+	station_start varchar(20) not null,
+	station_end varchar(20) not null,
+	cost_num1 float(7,1) null default null,
+	cost_num2 float(7,1) null default null,
+	cost_num3 float(7,1) null default null,
+	cost_num4 float(7,1) null default null,
+	cost_num5 float(7,1) null default null,
+	cost_num6 float(7,1) null default null,
+	cost_num7 float(7,1) null default null,
+	cost_num8 float(7,1) null default null,
+	cost_num9 float(7,1) null default null,
+	cost_num10 float(7,1) null default null,
+	cost_num11 float(7,1) null default null,
+	primary key(train_no,station_start,station_end)
+);
+
+create table seattable(
+	seat_id varchar(10) not null,
+	train_no varchar(10) not null,
+	seat_type varchar(10) not null,
+	seat_location1 varchar(10) not null,
+	seat_location2 varchar(10) not null,
+	primary key(seat_id,train_no)
+);
+
+create table tickettable(
+	ticket_no varchar(30) not null primary key,
+	train_no varchar(10) not null,
+	station_start varchar(20) not null,
+	station_end varchar(20) not null,
+	seat_id varchar(20) not null,
+	ticket_money float(7,1) not null,
+	ticket_flag1 int not null default 0,
+	ticket_flag2 int not null default 1
+);
+
+create table userorder(
+	order_no varchar(30) primary key not null,
+	ticket_no varchar(30) not null,
+	order_time datetime not null,
+	order_flag int not null,
+	user_username varchar(20) not null
+);	
+
+create table cardtable(
+	card_id varchar(20) not null primary key,
+	card_pass varchar(20) not null,
+	card_flag int not null default 0,
+	card_money int not null
+);
+
+create table noticetable(
+notice_name varchar(100) not null primary key,
+notice_time datetime not null,
+notice_article longtext not null
+);
+
+create table restticket(
+	station_start varchar(10) not null,
+	station_end varchar(10) not null,
+	rest0 int,
+	rest1 int,
+	rest2 int,
+	rest3 int
+	
+);
+
+create table timespread(
+	time7 int,
+	time8 int,
+	time9 int,
+	time10 int,
+	time11 int,
+	time12 int,
+	time13 int,
+	time14 int,
+	time15 int,
+	time16 int,
+	time17 int,
+	time18 int,
+	time19 int,
+	time20 int,
+	time21 int,
+	time22 int
+);
+create table hotsearchstation(
+station_name varchar(10) not null primary key,
+count int
+);
+
+create table userlog(
+user_username varchar(20) not null,
+log_time datetime not null,
+log_text varchar(20),
+log_type varchar(20),
+	primary key(user_username,log_time,log_type)
+);

@@ -1,0 +1,33 @@
+DELIMITER //
+drop procedure if exists checkrest;
+create procedure checkrest(trainno varchar(30),S varchar(30),E varchar(30),TT varchar(30),seattype varchar(30),username varchar(20))
+	begin	
+	declare daynum int;
+	declare TTT varchar(30);
+	declare ticketcount int default 0;
+	declare shortticketno varchar(30);
+	declare flag varchar(30) default 'x';
+		select station_time1_day into daynum from stationtable 
+		where train_no=trainno and station_start=S;
+		select date_format(date_sub(TT,interval daynum day),'%Y%m%d') into TTT;
+		
+		set shortticketno=concat(trainno,TTT);
+
+		select count(*) into ticketcount from tickettable 
+		where left(ticket_no,length(shortticketno))=shortticketno
+		and seat_id in (select seat_id from seattable where seat_type=seattype)
+		and station_start=S and station_end=E
+		and ticket_flag1=0 and ticket_flag2=1;
+		
+		if (ticketcount=0) then
+			select flag;
+		ELSE
+			set flag='y';
+			select flag;
+		END IF;
+	end;
+//
+DELIMITER ;
+
+call checkrest('G102','南京南','滁州','20160301','一等座','1');
+call checkrest('G102','上海虹桥','南京南','20160229','一等座','1');

@@ -1,0 +1,86 @@
+DELIMITER //
+drop procedure if exists cancelticket;
+create procedure cancelticket(orderno varchar(30))
+	begin
+		declare username varchar(30);
+		declare ticketno varchar(30);
+		declare cost float(7,1);
+		declare trainno varchar(20);
+		declare trainnum int;
+		declare numS int;
+		declare numE int;
+		declare S varchar(20);
+		declare E varchar(20);
+		declare shorttrainno varchar(30);
+		declare i int default 1;
+		declare j int;
+		declare R varchar(10) default '*';
+		declare t_error int default 0;
+		declare continue handler for sqlexception SET t_error=1;  
+		
+		
+		
+		select user_username,ticket_no into username,ticketno from userorder where order_no=orderno;
+		select ticket_money into cost from tickettable where ticket_no=ticketno;
+		
+		select train_no,station_start,station_end into trainno,S,E from tickettable where ticket_no=ticketno;
+		
+		select train_num into trainnum from trainnotable where date(train_time1)=substring(ticketno,length(trainno)+1,8) and train_no=trainno;
+		select station_order into numS from stationtable where train_no=trainno and station_start=S;
+		select station_order into numE from stationtable where train_no=trainno and station_start=E;
+		select left(ticketno,length(trainno)+8+5) into shorttrainno;
+		
+		START TRANSACTION;
+			while i<=numS do
+				set j=numS+1;
+				while j<=trainnum do
+					update tickettable set ticket_flag1=0,ticket_flag2=1 where left(ticket_no,length(train_no)+5+8)=shorttrainno 
+					and right(ticket_no,4)=concat(LPAD(i,2,0),LPAD(j,2,0))
+					and ticket_flag1=0 and ticket_flag2=0; 
+						IF t_error = 1 THEN  
+							ROLLBACK;  
+						ELSE  
+							COMMIT;  
+						END IF;  
+					set j=j+1;
+				end while;
+				set i=i+1;
+			end while;	
+			
+			set i=numS+1;
+			while i<=numE-1 do
+				set j=i+1;
+				while j<=trainnum do
+					update tickettable set ticket_flag1=0,ticket_flag2=1 where left(ticket_no,length(train_no)+5+8)=shorttrainno 
+					and right(ticket_no,4)=concat(LPAD(i,2,0),LPAD(j,2,0))
+					and ticket_flag1=0 and ticket_flag2=0; 
+						IF t_error = 1 THEN  
+							ROLLBACK;  
+						ELSE  
+							COMMIT;  
+						END IF;  
+					set j=j+1;
+				end while;
+				set i=i+1;
+			end while;
+			
+			update tickettable set ticket_flag1=0 and ticket_flag2=1 where ticket_no=ticketno;
+			update user set user_money=user_money+cost where user_username=username;
+			update userorder set order_flag=3 where order_no=orderno;
+			update tickettable set ticket_flag1=0,ticket_flag2=1 where ticket_no=ticketno;
+			
+			IF t_error = 1 THEN  
+				ROLLBACK;  
+			ELSE  
+				COMMIT;
+				set R='#';
+				select R;
+			END IF;
+	end;
+//
+DELIMITER ;
+
+
+call cancelticket('1#000001');
+
+		

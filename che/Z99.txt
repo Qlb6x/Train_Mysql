@@ -1,0 +1,240 @@
+﻿insert into trainnotable values
+('Z99','上海虹桥','广州东','直达',4,'20160411180200','20160412100800','16:06:00',1,null,null,null,null,null,null,30,null,30,30,null);
+insert into trainnotable values                       
+('Z99','上海虹桥','广州东','直达',4,'20160412180200','20160413100800','16:06:00',1,null,null,null,null,null,null,30,null,30,30,null);
+insert into trainnotable values                       
+('Z99','上海虹桥','广州东','直达',4,'20160413180200','20160414100800','16:06:00',1,null,null,null,null,null,null,30,null,30,30,null);
+insert into trainnotable values                       
+('Z99','上海虹桥','广州东','直达',4,'20160414180200','20160415100800','16:06:00',1,null,null,null,null,null,null,30,null,30,30,null);
+insert into trainnotable values                       
+('Z99','上海虹桥','广州东','直达',4,'20160415180200','20160416100800','16:06:00',1,null,null,null,null,null,null,30,null,30,30,null);
+insert into trainnotable values                       
+('Z99','上海虹桥','广州东','直达',4,'20160416180200','20160417100800','16:06:00',1,null,null,null,null,null,null,30,null,30,30,null);
+insert into trainnotable values                       
+('Z99','上海虹桥','广州东','直达',4,'20160417180200','20160418100800','16:06:00',1,null,null,null,null,null,null,30,null,30,30,null);
+insert into trainnotable values                       
+('Z99','上海虹桥','广州东','直达',4,'20160418180200','20160419100800','16:06:00',1,null,null,null,null,null,null,30,null,30,30,null);
+insert into trainnotable values                       
+('Z99','上海虹桥','广州东','直达',4,'20160419180200','20160420100800','16:06:00',1,null,null,null,null,null,null,30,null,30,30,null);
+insert into trainnotable values                       
+('Z99','上海虹桥','广州东','直达',4,'20160420180200','20160421100800','16:06:00',1,null,null,null,null,null,null,30,null,30,30,null);
+insert into trainnotable values                       
+('Z99','上海虹桥','广州东','直达',4,'20160421180200','20160422100800','16:06:00',1,null,null,null,null,null,null,30,null,30,30,null);
+insert into trainnotable values                       
+('Z99','上海虹桥','广州东','直达',4,'20160422180200','20160423100800','16:06:00',1,null,null,null,null,null,null,30,null,30,30,null);
+insert into trainnotable values                       
+('Z99','上海虹桥','广州东','直达',4,'20160423180200','20160424100800','16:06:00',1,null,null,null,null,null,null,30,null,30,30,null);
+insert into trainnotable values      
+('Z99','上海虹桥','广州东','直达',4,'20160424180200','20160425100800','16:06:00',1,null,null,null,null,null,null,30,null,30,30,null);
+
+insert into stationtable values
+('Z99','上海虹桥',1,'直达',null,0,'180200',0);
+insert into stationtable values
+('Z99','金华',2,'直达','210400',0,'210800',0);
+insert into stationtable values
+('Z99','株洲',3,'直达','030500',1,'032100',1);
+insert into stationtable values
+('Z99','广州东',4,'直达','100800',1,'110400',1);
+
+insert into costtable values
+('Z99','上海虹桥','金华',null,null,null,null,null,null,100.5,null,54.5,54.5,null);
+insert into costtable values
+('Z99','上海虹桥','株洲',null,null,null,null,null,null,245.5,null,148.5,148.5,null);
+insert into costtable values
+('Z99','上海虹桥','广州东',null,null,null,null,null,null,353.5,null,206.5,206.5,null);
+insert into costtable values
+('Z99','金华','株洲',null,null,null,null,null,null,178.5,null,102.5,102.5,null);
+insert into costtable values
+('Z99','金华','广州东',null,null,null,null,null,null,296.5,null,173.5,173.5,null);
+insert into costtable values
+('Z99','株洲','广州东',null,null,null,null,null,null,158.5,null,91.5,91.5,null);
+
+insert into seattable values
+('1','Z99','硬卧','01','01');
+insert into seattable values
+('2','Z99','硬卧','01','02');
+insert into seattable values
+('3','Z99','硬卧','01','03');
+insert into seattable values
+('4','Z99','硬卧','01','04');
+insert into seattable values
+('5','Z99','硬卧','01','05');
+insert into seattable values
+('6','Z99','硬卧','01','06');
+insert into seattable values
+('7','Z99','硬卧','01','07');
+insert into seattable values
+('8','Z99','硬卧','01','08');
+insert into seattable values
+('9','Z99','硬卧','01','09');
+insert into seattable values
+('10','Z99','硬卧','01','10');
+
+insert into seattable values
+('11','Z99','硬卧','01','11');
+insert into seattable values
+('12','Z99','硬卧','01','12');
+insert into seattable values
+('13','Z99','硬卧','01','13');
+insert into seattable values
+('14','Z99','硬卧','01','14');
+insert into seattable values
+('15','Z99','硬卧','01','15');
+insert into seattable values
+('16','Z99','硬卧','01','16');
+insert into seattable values
+('17','Z99','硬卧','01','17');
+insert into seattable values
+('18','Z99','硬卧','01','18');
+insert into seattable values
+('19','Z99','硬卧','01','19');
+insert into seattable values
+('20','Z99','硬卧','01','20');
+
+insert into seattable values
+('21','Z99','硬卧','01','21');
+insert into seattable values
+('22','Z99','硬卧','01','22');
+insert into seattable values
+('23','Z99','硬卧','01','23');
+insert into seattable values
+('24','Z99','硬卧','01','24');
+insert into seattable values
+('25','Z99','硬卧','01','25');
+insert into seattable values
+('26','Z99','硬卧','01','26');
+insert into seattable values
+('27','Z99','硬卧','01','27');
+insert into seattable values
+('28','Z99','硬卧','01','28');
+insert into seattable values
+('29','Z99','硬卧','01','29');
+insert into seattable values
+('30','Z99','硬卧','01','30');
+
+
+insert into seattable values
+('31','Z99','硬座','02','01');
+insert into seattable values
+('32','Z99','硬座','02','02');
+insert into seattable values
+('33','Z99','硬座','02','03');
+insert into seattable values
+('34','Z99','硬座','02','04');
+insert into seattable values
+('35','Z99','硬座','02','05');
+insert into seattable values
+('36','Z99','硬座','02','06');
+insert into seattable values
+('37','Z99','硬座','02','07');
+insert into seattable values
+('38','Z99','硬座','02','08');
+insert into seattable values
+('39','Z99','硬座','02','09');
+insert into seattable values
+('40','Z99','硬座','02','10');
+
+insert into seattable values
+('41','Z99','硬座','02','11');
+insert into seattable values
+('42','Z99','硬座','02','12');
+insert into seattable values
+('43','Z99','硬座','02','13');
+insert into seattable values
+('44','Z99','硬座','02','14');
+insert into seattable values
+('45','Z99','硬座','02','15');
+insert into seattable values
+('46','Z99','硬座','02','16');
+insert into seattable values
+('47','Z99','硬座','02','17');
+insert into seattable values
+('48','Z99','硬座','02','18');
+insert into seattable values
+('49','Z99','硬座','02','19');
+insert into seattable values
+('50','Z99','硬座','02','20');
+
+insert into seattable values
+('51','Z99','硬座','02','21');
+insert into seattable values
+('52','Z99','硬座','02','22');
+insert into seattable values
+('53','Z99','硬座','02','23');
+insert into seattable values
+('54','Z99','硬座','02','24');
+insert into seattable values
+('55','Z99','硬座','02','25');
+insert into seattable values
+('56','Z99','硬座','02','26');
+insert into seattable values
+('57','Z99','硬座','02','27');
+insert into seattable values
+('58','Z99','硬座','02','28');
+insert into seattable values
+('59','Z99','硬座','02','29');
+insert into seattable values
+('60','Z99','硬座','02','30');
+
+insert into seattable values
+('61','Z99','无座','03','01');
+insert into seattable values
+('62','Z99','无座','03','02');
+insert into seattable values
+('63','Z99','无座','03','03');
+insert into seattable values
+('64','Z99','无座','03','04');
+insert into seattable values
+('65','Z99','无座','03','05');
+insert into seattable values
+('66','Z99','无座','03','06');
+insert into seattable values
+('67','Z99','无座','03','07');
+insert into seattable values
+('68','Z99','无座','03','08');
+insert into seattable values
+('69','Z99','无座','03','09');
+insert into seattable values
+('70','Z99','无座','03','10');
+
+insert into seattable values
+('71','Z99','无座','03','11');
+insert into seattable values
+('72','Z99','无座','03','12');
+insert into seattable values
+('73','Z99','无座','03','13');
+insert into seattable values
+('74','Z99','无座','03','14');
+insert into seattable values
+('75','Z99','无座','03','15');
+insert into seattable values
+('76','Z99','无座','03','16');
+insert into seattable values
+('77','Z99','无座','03','17');
+insert into seattable values
+('78','Z99','无座','03','18');
+insert into seattable values
+('79','Z99','无座','03','19');
+insert into seattable values
+('80','Z99','无座','03','20');
+
+insert into seattable values
+('81','Z99','无座','03','21');
+insert into seattable values
+('82','Z99','无座','03','22');
+insert into seattable values
+('83','Z99','无座','03','23');
+insert into seattable values
+('84','Z99','无座','03','24');
+insert into seattable values
+('85','Z99','无座','03','25');
+insert into seattable values
+('86','Z99','无座','03','26');
+insert into seattable values
+('87','Z99','无座','03','27');
+insert into seattable values
+('88','Z99','无座','03','28');
+insert into seattable values
+('89','Z99','无座','03','29');
+insert into seattable values
+('90','Z99','无座','03','30');

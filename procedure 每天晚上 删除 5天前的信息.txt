@@ -1,0 +1,13 @@
+DELIMITER //
+drop procedure if exists everynightdel;
+create procedure everynightdel()
+	begin
+		delete from trainnotable
+		where date(train_time1)<date_sub(date(now()),interval 5 day);
+		delete from tickettable
+		where substring(ticket_no,length(train_no)+1,8)<date_format(date_sub(date(now()),interval 5 day),'%Y%m%d');
+		delete from userorder
+		where date(order_time)<date_sub(date(now()),interval 4 day);
+	end; 
+//
+DELIMITER ;
